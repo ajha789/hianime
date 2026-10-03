@@ -64,6 +64,22 @@ async function main() {
   };
   player.addEventListener('volume-change', updateVolumeValue);
   updateVolumeValue();
+
+  // Lets anyone load an arbitrary source URL into the player at runtime
+  // instead of only ever playing the bundled demo clip. If the URL's
+  // extension doesn't give away its type (e.g. segments served with a
+  // disguised extension), the type dropdown forces it explicitly rather
+  // than guessing.
+  const sourceForm = document.querySelector('[data-hn-source-form]');
+  const sourceInput = document.querySelector('[data-hn-source-input]');
+  const sourceType = document.querySelector('[data-hn-source-type]');
+  sourceForm?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const url = sourceInput?.value.trim();
+    if (!url) return;
+    const type = sourceType?.value || undefined;
+    player.src = type ? { src: url, type } : url;
+  });
 }
 
 main();

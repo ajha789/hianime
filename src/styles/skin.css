@@ -48,8 +48,66 @@ body {
 
 .demo-subtitle {
   color: var(--hn-text-dim);
-  margin: 0 0 28px;
+  margin: 0 0 20px;
   font-size: 14px;
+}
+
+/* --------------------------------------------------------------------
+   Custom source loader (outside the player chrome)
+   -------------------------------------------------------------------- */
+
+.hn-source-bar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.hn-source-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 10px 12px;
+  background: var(--hn-surface);
+  border: 1px solid rgb(255 255 255 / 0.14);
+  border-radius: 4px;
+  color: var(--hn-text);
+  font-size: 13px;
+  font-family: inherit;
+}
+
+.hn-source-input::placeholder {
+  color: var(--hn-text-dim);
+}
+
+.hn-source-input:focus {
+  outline: none;
+  border-color: rgb(255 255 255 / 0.4);
+}
+
+.hn-source-type {
+  flex-shrink: 0;
+  padding: 10px 10px;
+  background: var(--hn-surface);
+  border: 1px solid rgb(255 255 255 / 0.14);
+  border-radius: 4px;
+  color: var(--hn-text);
+  font-size: 13px;
+  font-family: inherit;
+}
+
+.hn-source-load {
+  flex-shrink: 0;
+  padding: 10px 18px;
+  background: var(--hn-text);
+  border: none;
+  border-radius: 4px;
+  color: var(--hn-brand-contrast);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.hn-source-load:hover {
+  background: var(--hn-text-dim);
 }
 
 /* --------------------------------------------------------------------
