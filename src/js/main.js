@@ -8,7 +8,8 @@
 // or filename matches `.ass`/`.ssa` — so a fansub track renders with full
 // positioning, styles, and effects, while ordinary WebVTT tracks still go
 // through Vidstack's own (CSS-styled) caption renderer.
-import 'vidstack/elements';
+import 'vidstack/player';
+import 'vidstack/player/ui';
 import { LibASSTextRenderer } from 'vidstack';
 
 const ASS_TRACK = {
