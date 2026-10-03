@@ -42,10 +42,9 @@
         load="eager"
         stream-type="on-demand"
       >
-        <media-provider>
-        </media-provider>
+        <media-provider></media-provider>
 
-        <!-- Native text tracks kept for fallback / non-ASS subs -->
+        <!-- Demo fallback track; remote HLS subtitles are loaded from meta.json. -->
         <track
           src="./sample/sample.vtt"
           kind="subtitles"

@@ -22,14 +22,18 @@ const ASS_TRACK = {
 
 const HLS_MIME = 'application/x-mpegurl';
 
+function isHlsUrl(url) {
+  const path = url.split(/[?#]/, 1)[0].toLowerCase();
+  return path.endsWith('.m3u8') || path.endsWith('.txt');
+}
+
 // Some HLS origins expose playlists as `index.txt` instead of `.m3u8` and
 // may use misleading extensions for MPEG-TS segments. Vidstack can play
 // these playlists when the HLS MIME type is supplied explicitly.
 function sourceForPlayer(url, type = '') {
   if (type) return { src: url, type };
 
-  const path = url.split(/[?#]/, 1)[0].toLowerCase();
-  if (path.endsWith('.m3u8') || path.endsWith('.txt')) {
+  if (isHlsUrl(url)) {
     return { src: url, type: HLS_MIME };
   }
 
@@ -41,6 +45,10 @@ async function main() {
 
   const player = document.querySelector('.hn-player');
   if (!player) return;
+
+  // Remove any stale poster property left by an older cached markup/build.
+  player.removeAttribute('poster');
+  player.poster = '';
 
   const jassubUrl = './vendor/jassub/jassub.js';
 
@@ -56,6 +64,42 @@ async function main() {
   // Demo track showing off the fansub renderer alongside the plain
   // WebVTT <track> already declared in the markup.
   player.textTracks.add(ASS_TRACK);
+
+  let metadataTracks = [];
+  let subtitleRequest = 0;
+  const clearMetadataTracks = () => {
+    for (const track of metadataTracks) player.textTracks.remove(track);
+    metadataTracks = [];
+  };
+  const loadMetadataSubtitles = async (url) => {
+    clearMetadataTracks();
+    const request = ++subtitleRequest;
+    if (!isHlsUrl(url)) return;
+
+    try {
+      const metadataUrl = new URL('meta.json', url).href;
+      const response = await fetch(metadataUrl, { credentials: 'omit' });
+      if (!response.ok) return;
+      const metadata = await response.json();
+      if (request !== subtitleRequest || !Array.isArray(metadata.subs)) return;
+
+      for (const [index, subtitle] of metadata.subs.entries()) {
+        if (!subtitle?.file) continue;
+        const track = player.textTracks.add({
+          kind: 'subtitles',
+          label: subtitle.label || `Subtitle ${index + 1}`,
+          language: subtitle.label?.toLowerCase().includes('english') ? 'en' : '',
+          type: subtitle.file.toLowerCase().endsWith('.ass') ? 'ass' : 'vtt',
+          src: new URL(subtitle.file, metadataUrl).href,
+          default: subtitle.default === true || index === 0,
+        });
+        metadataTracks.push(track);
+        if (subtitle.default === true || index === 0) track.mode = 'showing';
+      }
+    } catch {
+      // Subtitle metadata is optional; video playback should continue without it.
+    }
+  };
 
   // Use the first second of the media as the idle preview instead of loading
   // a separate poster image. Reset this for every newly loaded source.
@@ -107,9 +151,10 @@ async function main() {
     const url = sourceInput?.value.trim();
     if (!url) return;
     player.src = sourceForPlayer(url, sourceType?.value || '');
+    loadMetadataSubtitles(url);
   });
 }
 
-export { sourceForPlayer };
+export { isHlsUrl, sourceForPlayer };
 
 main();
