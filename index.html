@@ -37,10 +37,8 @@
 
         <media-buffering-indicator class="hn-buffering">
           <svg class="hn-buffering-icon" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="32" cy="32" r="26" stroke="currentColor" stroke-opacity="0.18" stroke-width="5"/>
-            <path d="M58 32c0-14.36-11.64-26-26-26" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
-            <circle cx="32" cy="32" r="15" stroke="currentColor" stroke-opacity="0.12" stroke-width="3"/>
-            <path d="M17 32a15 15 0 0 1 15-15" stroke="currentColor" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
+            <circle class="hn-buffering-track" cx="32" cy="32" r="26" stroke="currentColor" stroke-width="4"/>
+            <circle class="hn-buffering-arc" cx="32" cy="32" r="26" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
           </svg>
         </media-buffering-indicator>
 
@@ -147,17 +145,36 @@
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M22.0001 19.9999L2 19.9999L2 4L22.0001 4L22.0001 19.9999ZM4.0001 18.0001L20 18.0001L20 6.0001L4.0001 6.0001L4.0001 18.0001Z" fill="currentColor"/>
                   </svg>
                 </media-menu-button>
-                <media-menu-items class="hn-menu-items" placement="top end">
-                  <media-captions-radio-group class="hn-radio-group">
-                    <template>
-                      <media-radio class="hn-radio">
-                        <svg class="hn-radio-check" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M4 12.611L8.923 17.5L20 6.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                        <span class="hn-radio-label" data-part="label"></span>
-                      </media-radio>
-                    </template>
-                  </media-captions-radio-group>
+                <media-menu-items class="hn-menu-items hn-menu-items--tracks" placement="top end">
+                  <div class="hn-track-columns">
+                    <div class="hn-track-column">
+                      <div class="hn-track-column-header">Audio</div>
+                      <media-audio-radio-group class="hn-radio-group hn-radio-group--scroll">
+                        <template>
+                          <media-radio class="hn-radio hn-radio--track">
+                            <span class="hn-radio-label" data-part="label"></span>
+                            <svg class="hn-radio-check hn-radio-check--circle" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path fill-rule="evenodd" clip-rule="evenodd" d="M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12ZM15.7929 8.29289L17.2071 9.70711L10.5 16.4142L6.79289 12.7071L8.20711 11.2929L10.5 13.5858L15.7929 8.29289Z" fill="currentColor"/>
+                            </svg>
+                          </media-radio>
+                        </template>
+                      </media-audio-radio-group>
+                    </div>
+                    <div class="hn-track-divider"></div>
+                    <div class="hn-track-column">
+                      <div class="hn-track-column-header">Subtitles/CC</div>
+                      <media-captions-radio-group class="hn-radio-group hn-radio-group--scroll" off-label="None">
+                        <template>
+                          <media-radio class="hn-radio hn-radio--track">
+                            <span class="hn-radio-label" data-part="label"></span>
+                            <svg class="hn-radio-check hn-radio-check--circle" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path fill-rule="evenodd" clip-rule="evenodd" d="M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12ZM15.7929 8.29289L17.2071 9.70711L10.5 16.4142L6.79289 12.7071L8.20711 11.2929L10.5 13.5858L15.7929 8.29289Z" fill="currentColor"/>
+                            </svg>
+                          </media-radio>
+                        </template>
+                      </media-captions-radio-group>
+                    </div>
+                  </div>
                 </media-menu-items>
               </media-menu>
 
@@ -186,6 +203,24 @@
                   </svg>
                 </media-menu-button>
                 <media-menu-items class="hn-menu-items" placement="top end">
+                  <div class="hn-settings-row">
+                    <span class="hn-menu-item-label">Volume</span>
+                    <media-volume-slider class="hn-volume-slider hn-volume-slider--settings">
+                      <div class="hn-slider-track" slot="track"></div>
+                      <div class="hn-slider-track-fill hn-slider-track-fill--progress" slot="track-fill"></div>
+                      <div class="hn-slider-thumb" slot="thumb"></div>
+                    </media-volume-slider>
+                  </div>
+
+                  <button type="button" class="hn-settings-row hn-settings-row--toggle" data-hn-autoplay-toggle aria-pressed="false">
+                    <span class="hn-menu-item-label">Autoplay next episode</span>
+                    <span class="hn-toggle">
+                      <span class="hn-toggle-handle"></span>
+                    </span>
+                  </button>
+
+                  <div class="hn-menu-divider"></div>
+
                   <media-menu class="hn-submenu">
                     <media-menu-button class="hn-menu-item">
                       <svg class="hn-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

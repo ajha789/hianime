@@ -47,6 +47,14 @@ async function main() {
   };
   player.addEventListener('rate-change', updateSpeedLabel);
   updateSpeedLabel();
+
+  // Autoplay-next-episode is a visual toggle only -- there's no multi-
+  // episode queue in this demo, so it just persists its own on/off state.
+  const autoplayToggle = player.querySelector('[data-hn-autoplay-toggle]');
+  autoplayToggle?.addEventListener('click', () => {
+    const next = autoplayToggle.getAttribute('aria-pressed') !== 'true';
+    autoplayToggle.setAttribute('aria-pressed', String(next));
+  });
 }
 
 main();
