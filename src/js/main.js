@@ -67,17 +67,52 @@ async function main() {
 
   // Lets anyone load an arbitrary source URL into the player at runtime
   // instead of only ever playing the bundled demo clip. If the URL's
-  // extension doesn't give away its type (e.g. segments served with a
-  // disguised extension), the type dropdown forces it explicitly rather
-  // than guessing.
+  // extension doesn't give away its type (e.g. an HLS manifest served as
+  // `.txt`, or segments served with a disguised `.jpg` extension), the
+  // type dropdown forces it explicitly. hls.js itself doesn't care what
+  // extension the manifest or its segments have -- it just fetches
+  // whatever URI each #EXTINF line names and treats the bytes as MPEG-TS
+  // -- so no provider changes are needed for the segments themselves;
+  // only the *manifest's* type needs to be known up front, since that's
+  // what tells Vidstack which provider (hls.js vs native video/mp4/etc.)
+  // to hand the src to.
+  const KNOWN_EXTENSIONS = /\.(m3u8|mpd|mp4|webm|mov|m4v)(\?|#|$)/i;
+
+  async function sniffManifestType(url) {
+    try {
+      const res = await fetch(url, { headers: { Range: 'bytes=0-2048' } });
+      if (!res.ok) return undefined;
+      const text = await res.text();
+      if (/^#EXTM3U/m.test(text)) return 'application/x-mpegurl';
+      if (/<MPD[\s>]/.test(text)) return 'application/dash+xml';
+    } catch {
+      // Cross-origin manifest without permissive CORS, network error, etc.
+      // Fall through and let the caller fall back to manual selection.
+    }
+    return undefined;
+  }
+
   const sourceForm = document.querySelector('[data-hn-source-form]');
   const sourceInput = document.querySelector('[data-hn-source-input]');
   const sourceType = document.querySelector('[data-hn-source-type]');
-  sourceForm?.addEventListener('submit', (event) => {
+  const sourceLoadButton = sourceForm?.querySelector('.hn-source-load');
+
+  sourceForm?.addEventListener('submit', async (event) => {
     event.preventDefault();
     const url = sourceInput?.value.trim();
     if (!url) return;
-    const type = sourceType?.value || undefined;
+
+    let type = sourceType?.value || undefined;
+
+    // Only bother sniffing when the user didn't force a type AND the URL's
+    // extension is ambiguous (e.g. the manifest is served as `index.txt`).
+    // A recognizable extension is trusted as-is to avoid an extra request.
+    if (!type && !KNOWN_EXTENSIONS.test(url)) {
+      if (sourceLoadButton) sourceLoadButton.disabled = true;
+      type = await sniffManifestType(url);
+      if (sourceLoadButton) sourceLoadButton.disabled = false;
+    }
+
     player.src = type ? { src: url, type } : url;
   });
 }
