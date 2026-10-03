@@ -1,24 +1,10 @@
-// Hianime Player bootstrap.
-//
-// Registers all `media-*` custom elements used in index.html, then wires
-// up pixel-accurate `.ass` fansub subtitle rendering via Vidstack's built-in
-// `LibASSTextRenderer`, backed by our vendored copy of JASSUB (a WASM build
-// of libass) at /vendor/jassub. Vidstack automatically prefers this
-// renderer over its plain-text caption renderer for any track whose type
-// or filename matches `.ass`/`.ssa` — so a fansub track renders with full
-// positioning, styles, and effects, while ordinary WebVTT tracks still go
-// through Vidstack's own (CSS-styled) caption renderer.
+// Hianime Player bootstrap. WebVTT subtitle files are converted to ASS cue
+// documents in-browser and rendered through the existing JASSUB/libass WASM.
 import 'vidstack/player';
 import 'vidstack/player/ui';
 import { LibASSTextRenderer } from 'vidstack';
-
-const ASS_TRACK = {
-  kind: 'subtitles',
-  label: 'Fansub (ASS)',
-  language: 'en',
-  type: 'ssa',
-  src: './sample/sample.ass',
-};
+import jassubWorkerUrl from 'jassub/dist/worker/worker.js?worker&url';
+import { vttToAss } from './vtt-to-ass.js';
 
 const HLS_MIME = 'application/x-mpegurl';
 
@@ -50,56 +36,117 @@ async function main() {
   player.removeAttribute('poster');
   player.poster = '';
 
-  const jassubUrl = './vendor/jassub/jassub.js';
-
+  // Resolve static WASM assets from the app root (not relative to this JS
+  // module, which Vite serves from /src/js or /assets).
+  const jassubAssetUrl = (path) => new URL(`vendor/jassub/${path}`, document.baseURI).href;
   player.textRenderers.add(
-    new LibASSTextRenderer(() => import(/* @vite-ignore */ jassubUrl), {
-      workerUrl: './vendor/jassub/wasm/jassub-worker.js',
-      wasmUrl: './vendor/jassub/wasm/jassub-worker.wasm',
-      modernWasmUrl: './vendor/jassub/wasm/jassub-worker-modern.wasm',
-      defaultFont: './vendor/jassub/default.woff2',
+    new LibASSTextRenderer(() => import('./jassub-vidstack-adapter.js'), {
+      workerUrl: jassubWorkerUrl,
+      wasmUrl: jassubAssetUrl('wasm/jassub-worker.wasm'),
+      modernWasmUrl: jassubAssetUrl('wasm/jassub-worker-modern.wasm'),
     }),
   );
 
-  // Demo track showing off the fansub renderer alongside the plain
-  // WebVTT <track> already declared in the markup.
-  player.textTracks.add(ASS_TRACK);
-
-  let metadataTracks = [];
+  let subtitleTracks = [];
+  let subtitleBlobUrls = new Set();
   let subtitleRequest = 0;
-  const clearMetadataTracks = () => {
-    for (const track of metadataTracks) player.textTracks.remove(track);
-    metadataTracks = [];
+
+  const clearSubtitleTracks = () => {
+    for (const track of subtitleTracks) player.textTracks.remove(track);
+    subtitleTracks = [];
+
+    // Let JASSUB finish releasing its active URL before revoking old blobs.
+    for (const blobUrl of subtitleBlobUrls) {
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 5000);
+    }
+    subtitleBlobUrls = new Set();
   };
+
+  const addSubtitleTrack = async ({ src, label, language = '', isDefault = false }, request) => {
+    const sourceUrl = new URL(src, document.baseURI).href;
+    const sourcePath = new URL(sourceUrl).pathname.toLowerCase();
+    const isAssFile = /\.(?:ass|ssa)$/.test(sourcePath);
+    let trackSrc = sourceUrl;
+
+    if (!isAssFile) {
+      // Fetch WebVTT now, convert its cues into a Blob-backed ASS document,
+      // then let Vidstack select LibASSTextRenderer for type="ass".
+      const response = await fetch(sourceUrl, { credentials: 'omit' });
+      if (!response.ok) {
+        throw new Error(`Subtitle request failed (${response.status}): ${sourceUrl}`);
+      }
+      const vttText = await response.text();
+      if (request !== subtitleRequest) return null;
+
+      trackSrc = URL.createObjectURL(new Blob([vttToAss(vttText)], { type: 'text/plain' }));
+      subtitleBlobUrls.add(trackSrc);
+    }
+
+    if (request !== subtitleRequest) {
+      if (!isAssFile) {
+        URL.revokeObjectURL(trackSrc);
+        subtitleBlobUrls.delete(trackSrc);
+      }
+      return null;
+    }
+
+    const track = player.textTracks.add({
+      kind: 'subtitles',
+      label,
+      language,
+      type: 'ass',
+      src: trackSrc,
+      default: isDefault,
+    });
+    subtitleTracks.push(track);
+    if (isDefault) track.mode = 'showing';
+    return track;
+  };
+
   const loadMetadataSubtitles = async (url) => {
-    clearMetadataTracks();
+    clearSubtitleTracks();
     const request = ++subtitleRequest;
     if (!isHlsUrl(url)) return;
 
     try {
       const metadataUrl = new URL('meta.json', url).href;
       const response = await fetch(metadataUrl, { credentials: 'omit' });
-      if (!response.ok) return;
+      if (!response.ok) {
+        console.warn(`Subtitle metadata request failed (${response.status}): ${metadataUrl}`);
+        return;
+      }
       const metadata = await response.json();
       if (request !== subtitleRequest || !Array.isArray(metadata.subs)) return;
 
       for (const [index, subtitle] of metadata.subs.entries()) {
         if (!subtitle?.file) continue;
-        const track = player.textTracks.add({
-          kind: 'subtitles',
-          label: subtitle.label || `Subtitle ${index + 1}`,
-          language: subtitle.label?.toLowerCase().includes('english') ? 'en' : '',
-          type: subtitle.file.toLowerCase().endsWith('.ass') ? 'ass' : 'vtt',
-          src: new URL(subtitle.file, metadataUrl).href,
-          default: subtitle.default === true || index === 0,
-        });
-        metadataTracks.push(track);
-        if (subtitle.default === true || index === 0) track.mode = 'showing';
+        try {
+          await addSubtitleTrack({
+            src: new URL(subtitle.file, metadataUrl).href,
+            label: subtitle.label || `Subtitle ${index + 1}`,
+            language: subtitle.label?.toLowerCase().includes('english') ? 'en' : '',
+            isDefault: subtitle.default === true || index === 0,
+          }, request);
+        } catch (error) {
+          console.warn(`Could not load subtitle ${subtitle.file}:`, error);
+        }
+        if (request !== subtitleRequest) return;
       }
-    } catch {
+    } catch (error) {
       // Subtitle metadata is optional; video playback should continue without it.
+      console.warn('Could not load subtitle metadata:', error);
     }
   };
+
+  // Start the sample VTT conversion on load. A user-submitted source will
+  // invalidate this request and replace the demo subtitle with its own tracks.
+  const demoRequest = ++subtitleRequest;
+  addSubtitleTrack({
+    src: './sample/sample.vtt',
+    label: 'English (WebVTT → libass)',
+    language: 'en',
+    isDefault: true,
+  }, demoRequest).catch((error) => console.warn('Could not load the sample VTT subtitle:', error));
 
   // Use the first second of the media as the idle preview instead of loading
   // a separate poster image. Reset this for every newly loaded source.
@@ -138,11 +185,8 @@ async function main() {
   player.addEventListener('volume-change', updateVolumeValue);
   updateVolumeValue();
 
-  // Lets anyone load an arbitrary source URL into the player at runtime
-  // instead of only ever playing the bundled demo clip. If the URL's
-  // extension doesn't give away its type (e.g. segments served with a
-  // disguised extension), the type dropdown forces it explicitly rather
-  // than guessing.
+  // Lets anyone load an arbitrary source URL into the player at runtime. If
+  // the URL's extension doesn't give away its type, use the type dropdown.
   const sourceForm = document.querySelector('[data-hn-source-form]');
   const sourceInput = document.querySelector('[data-hn-source-input]');
   const sourceType = document.querySelector('[data-hn-source-type]');

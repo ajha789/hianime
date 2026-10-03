@@ -1,10 +1,10 @@
 {
   "name": "hianime-player",
   "version": "1.0.0",
-  "description": "Custom Crunchyroll-inspired video player UI, built on Vidstack, with fansub-style ASS subtitle rendering",
+  "description": "Custom Vidstack player with live WebVTT-to-ASS subtitles rendered through libass/WASM",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node --test src/js/*.test.js",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview"
