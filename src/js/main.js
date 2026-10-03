@@ -47,6 +47,20 @@ async function main() {
     }),
   );
 
+  const controlsIdleDelay = 2000;
+  let controlsIdleTimer;
+  const resetControlsIdle = () => {
+    clearTimeout(controlsIdleTimer);
+    player.removeAttribute('data-hn-controls-idle');
+    controlsIdleTimer = setTimeout(() => {
+      player.setAttribute('data-hn-controls-idle', '');
+    }, controlsIdleDelay);
+  };
+  for (const eventName of ['pointermove', 'pointerdown', 'touchstart', 'keydown', 'focusin']) {
+    player.addEventListener(eventName, resetControlsIdle, { passive: true });
+  }
+  resetControlsIdle();
+
   let subtitleTracks = [];
   let subtitleBlobUrls = new Set();
   let subtitleRequest = 0;

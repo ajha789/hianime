@@ -253,6 +253,19 @@ body {
     rgb(0 0 0 / 0) 100%
   );
   box-sizing: border-box;
+  transition: opacity 180ms ease, visibility 0s linear;
+}
+
+.hn-player[data-hn-controls-idle] .hn-controls {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 180ms ease, visibility 0s linear 180ms;
+}
+
+.hn-player[data-hn-controls-idle],
+.hn-player[data-hn-controls-idle] * {
+  cursor: none !important;
 }
 
 .hn-top-gradient {
