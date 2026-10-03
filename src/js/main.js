@@ -57,6 +57,19 @@ async function main() {
   // WebVTT <track> already declared in the markup.
   player.textTracks.add(ASS_TRACK);
 
+  // Use the first second of the media as the idle preview instead of loading
+  // a separate poster image. Reset this for every newly loaded source.
+  let previewPending = true;
+  player.addEventListener('load-start', () => {
+    previewPending = true;
+  });
+  player.addEventListener('can-play', () => {
+    if (!previewPending) return;
+    previewPending = false;
+    if (player.currentTime < 1) player.currentTime = 1;
+    player.pause();
+  });
+
   const speedLabel = player.querySelector('[data-hn-speed-label]');
   const updateSpeedLabel = () => {
     if (speedLabel) speedLabel.textContent = `${player.playbackRate}x`;
