@@ -16,7 +16,7 @@
   --hn-brand-contrast: #0a0a0b;
   --hn-accent-on: #ff6a00;
   --hn-slider-red: #e5202e;
-  --hn-buffer-red: #ff5a3c;
+  --hn-buffer-red: #ff7a63;
   --hn-focus: 0 0 0 2px rgb(255 255 255 / 0.55);
   --hn-radius: 0px;
 
@@ -181,8 +181,8 @@ body {
    -------------------------------------------------------------------- */
 
 .hn-buffering-icon {
-  width: var(--media-buffering-size, 88px);
-  height: var(--media-buffering-size, 88px);
+  width: var(--media-buffering-size, 92px);
+  height: var(--media-buffering-size, 92px);
   color: var(--hn-buffer-red);
   filter: drop-shadow(0 2px 14px rgb(0 0 0 / 0.5));
   opacity: 0;
@@ -190,23 +190,26 @@ body {
 }
 
 /* Hidden entirely at rest -- only shown while the player is actually
-   buffering, and gone the moment the stream has enough data to play. */
+   buffering, and gone the instant the stream has enough data to play
+   (vidstack clears [data-buffering] as soon as playback can continue). */
 :where([data-buffering]) .hn-buffering-icon {
   opacity: 1;
 }
 
 .hn-buffering-track {
-  opacity: 0.25;
+  opacity: 0.22;
 }
 
 .hn-buffering-arc {
   stroke-dasharray: 52 98.8;
   stroke-dashoffset: 0;
-  transform-origin: 32px 32px;
+  transform-box: fill-box;
+  transform-origin: center;
+  will-change: transform;
 }
 
 :where([data-buffering]) .hn-buffering-arc {
-  animation: hn-spin 0.9s linear infinite;
+  animation: hn-spin 1.3s linear infinite;
 }
 
 @keyframes hn-spin {
@@ -357,16 +360,16 @@ body {
 }
 
 .hn-icon {
-  width: 22px;
-  height: 22px;
+  width: 23px;
+  height: 23px;
   pointer-events: none;
   flex-shrink: 0;
   color: var(--hn-text);
 }
 
 .hn-icon--chev {
-  width: 16px;
-  height: 16px;
+  width: 17px;
+  height: 17px;
   margin-left: auto;
   color: var(--hn-text);
 }
@@ -626,8 +629,8 @@ media-mute-button[data-state='muted'] .hn-volume-mute {
 }
 
 .hn-radio-check {
-  width: 14px;
-  height: 14px;
+  width: 15px;
+  height: 15px;
   opacity: 0;
   color: var(--hn-brand-2);
   flex-shrink: 0;
@@ -718,8 +721,8 @@ media-mute-button[data-state='muted'] .hn-volume-mute {
 /* Filled circle-check used in the track panel, instead of the plain
    checkmark glyph used elsewhere. */
 .hn-radio-check--circle {
-  width: 20px;
-  height: 20px;
+  width: 21px;
+  height: 21px;
   opacity: 0;
   color: var(--hn-text);
 }
@@ -850,8 +853,8 @@ media-mute-button[data-state='muted'] .hn-volume-mute {
 }
 
 .hn-toggle-check {
-  width: 12px;
-  height: 12px;
+  width: 13px;
+  height: 13px;
   color: var(--hn-surface-2);
   opacity: 0;
 }
