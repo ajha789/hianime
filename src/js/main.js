@@ -40,6 +40,13 @@ async function main() {
   // Demo track showing off the fansub renderer alongside the plain
   // WebVTT <track> already declared in the markup.
   player.textTracks.add(ASS_TRACK);
+
+  const speedLabel = player.querySelector('[data-hn-speed-label]');
+  const updateSpeedLabel = () => {
+    if (speedLabel) speedLabel.textContent = `${player.playbackRate}x`;
+  };
+  player.addEventListener('rate-change', updateSpeedLabel);
+  updateSpeedLabel();
 }
 
 main();

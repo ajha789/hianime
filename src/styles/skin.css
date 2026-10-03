@@ -66,6 +66,29 @@ body {
 }
 
 .hn-poster {
+  display: block;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease-out;
+  background-color: black;
+}
+
+.hn-poster[data-visible] {
+  opacity: 1;
+}
+
+.hn-poster[data-hidden] {
+  display: none;
+}
+
+.hn-poster img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
 }
 
@@ -109,12 +132,13 @@ body {
    -------------------------------------------------------------------- */
 
 .hn-controls {
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   height: 100%;
   width: 100%;
-  padding: 10px 18px 14px;
+  padding: 0 18px 14px;
   background: linear-gradient(
     to top,
     rgb(0 0 0 / 0.85) 0%,
@@ -122,6 +146,43 @@ body {
     rgb(0 0 0 / 0) 100%
   );
   box-sizing: border-box;
+}
+
+.hn-top-gradient {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 14px 18px;
+  background: linear-gradient(to bottom, rgb(0 0 0 / 0.75) 0%, rgb(0 0 0 / 0) 100%);
+  box-sizing: border-box;
+  pointer-events: none;
+}
+
+.hn-rating-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  pointer-events: auto;
+}
+
+.hn-rating-badge-tag {
+  flex-shrink: 0;
+  padding: 7px 10px;
+  border-radius: 6px;
+  background: rgb(255 255 255 / 0.18);
+  backdrop-filter: blur(4px);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+  color: var(--hn-text);
+}
+
+.hn-rating-badge-text {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--hn-text);
+  text-shadow: 0 1px 3px rgb(0 0 0 / 0.6);
 }
 
 .hn-controls-spacer {
@@ -150,42 +211,58 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 8px;
-  color: var(--hn-text);
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  padding: 6px;
+  border: none;
+  background: none;
+  border-radius: 9999px;
+  color: var(--hn-text-dim);
   cursor: pointer;
-  transition: background-color 0.15s ease, transform 0.15s ease;
+  opacity: 0.85;
+  transition: background-color 0.15s ease, color 0.15s ease, opacity 0.15s ease;
 }
 
-.hn-btn:hover {
-  background: rgb(255 255 255 / 0.1);
+.hn-btn:hover,
+.hn-btn:focus-visible {
+  background: rgb(255 255 255 / 0.12);
+  color: var(--hn-text);
+  opacity: 1;
 }
 
 .hn-btn:active {
-  transform: scale(0.92);
+  color: var(--hn-brand-2);
 }
 
-.hn-btn--play {
-  width: 42px;
-  height: 42px;
+.hn-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.hn-btn:disabled:hover {
+  background: none;
+  color: var(--hn-text-dim);
+}
+
+.hn-btn--text {
+  width: auto;
+  min-width: 40px;
+  padding: 0 10px;
+  font-size: 14px;
+  font-weight: 700;
 }
 
 .hn-icon {
-  width: 20px;
-  height: 20px;
-  filter: invert(1) brightness(1.5);
-  pointer-events: none;
-}
-
-.hn-btn--play .hn-icon {
   width: 22px;
   height: 22px;
+  pointer-events: none;
+  flex-shrink: 0;
 }
 
 .hn-icon--chev {
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   margin-left: auto;
   opacity: 0.6;
 }
@@ -210,22 +287,36 @@ media-play-button:not([data-ended]) .hn-icon--replay {
   display: none;
 }
 
-media-mute-button:not([data-muted]) .hn-icon--vol-muted,
-media-mute-button[data-muted] .hn-icon--vol-low,
-media-mute-button[data-muted] .hn-icon--vol-high,
-media-mute-button:not([data-state='low']) .hn-icon--vol-low,
-media-mute-button:not([data-state='high']) .hn-icon--vol-high {
-  display: none;
-}
-
-media-pip-button[data-active] .hn-icon--pip-enter,
-media-pip-button:not([data-active]) .hn-icon--pip-exit {
-  display: none;
-}
-
 media-fullscreen-button[data-active] .hn-icon--fs-enter,
 media-fullscreen-button:not([data-active]) .hn-icon--fs-exit {
   display: none;
+}
+
+/* Volume icon — one SVG, tiers shown/hidden by the mute button's own
+   data-state ('low' | 'high' | 'muted'), matching how Crunchyroll keys
+   its own volume glyph off a single data-volume-tier attribute. */
+
+.hn-volume-icon .hn-volume-mute,
+.hn-volume-icon .hn-volume-t1,
+.hn-volume-icon .hn-volume-t2,
+.hn-volume-icon .hn-volume-t3 {
+  display: none;
+}
+
+media-mute-button[data-state='low'] .hn-volume-t1,
+media-mute-button[data-state='high'] .hn-volume-t1,
+media-mute-button[data-state='low'] .hn-volume-t2,
+media-mute-button[data-state='high'] .hn-volume-t2 {
+  display: block;
+}
+
+media-mute-button[data-state='high'] .hn-volume-t3 {
+  display: block;
+}
+
+media-mute-button[data-state='muted'] .hn-volume-mute {
+  display: block;
+  fill: currentColor;
 }
 
 /* Time ------------------------------------------------------------------ */
