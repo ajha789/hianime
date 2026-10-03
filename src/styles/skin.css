@@ -16,6 +16,7 @@
   --hn-brand-contrast: #0a0a0b;
   --hn-accent-on: #ff6a00;
   --hn-slider-red: #e5202e;
+  --hn-buffer-red: #ff5a3c;
   --hn-focus: 0 0 0 2px rgb(255 255 255 / 0.55);
   --hn-radius: 0px;
 
@@ -182,8 +183,8 @@ body {
 .hn-buffering-icon {
   width: var(--media-buffering-size, 88px);
   height: var(--media-buffering-size, 88px);
-  color: var(--hn-text);
-  filter: drop-shadow(0 2px 14px rgb(0 0 0 / 0.65));
+  color: var(--hn-buffer-red);
+  filter: drop-shadow(0 2px 14px rgb(0 0 0 / 0.5));
   opacity: 0;
   transition: opacity 0.15s ease;
 }
@@ -199,8 +200,7 @@ body {
 }
 
 .hn-buffering-arc {
-  color: var(--hn-slider-red);
-  stroke-dasharray: 31 119.8;
+  stroke-dasharray: 52 98.8;
   stroke-dashoffset: 0;
   transform-origin: 32px 32px;
 }
