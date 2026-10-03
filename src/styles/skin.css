@@ -471,11 +471,11 @@ media-mute-button[data-state='muted'] .hn-volume-mute {
 
 .hn-time-slider,
 .hn-volume-slider {
-  --media-slider-height: 6px;
+  --media-slider-height: 4px;
   position: relative;
   display: flex;
   align-items: center;
-  height: 24px;
+  height: 18px;
   cursor: pointer;
   touch-action: none;
 }
@@ -506,30 +506,28 @@ media-mute-button[data-state='muted'] .hn-volume-mute {
   position: absolute;
   left: 0;
   right: 0;
-  height: 4px;
-  border-radius: 999px;
-  background: rgb(255 255 255 / 0.22);
-  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.08);
-  transition: height 0.16s ease, background-color 0.16s ease;
+  height: 3px;
+  border-radius: 0;
+  background: rgb(255 255 255 / 0.2);
+  transition: height 0.12s ease;
 }
 
 .hn-slider-track-fill {
   position: absolute;
   left: 0;
-  height: 4px;
-  border-radius: 999px;
+  height: 3px;
+  border-radius: 0;
   pointer-events: none;
 }
 
 .hn-slider-track-fill--progress {
-  background: linear-gradient(90deg, var(--hn-slider-red), #ff5267);
+  background: var(--hn-slider-red);
   width: var(--slider-fill, 0%);
   z-index: 2;
-  box-shadow: 0 0 8px rgb(255 45 85 / 0.35);
 }
 
 .hn-slider-track-fill--buffered {
-  background: rgb(255 255 255 / 0.28);
+  background: rgb(255 255 255 / 0.32);
   width: var(--slider-progress, 0%);
   z-index: 1;
 }
@@ -538,13 +536,13 @@ media-mute-button[data-state='muted'] .hn-volume-mute {
   position: absolute;
   top: 50%;
   left: var(--slider-fill, 0%);
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: #fff;
-  box-shadow: 0 0 0 2px var(--hn-slider-red), 0 2px 8px rgb(0 0 0 / 0.5);
-  transform: translate(-50%, -50%) scale(0.65);
-  transition: transform 0.16s ease;
+  width: 3px;
+  height: 14px;
+  border-radius: 0;
+  background: var(--hn-slider-red);
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 0.4);
+  transform: translate(-50%, -50%) scaleY(0);
+  transition: transform 0.12s ease;
   z-index: 3;
 }
 
@@ -553,19 +551,13 @@ media-mute-button[data-state='muted'] .hn-volume-mute {
 .hn-time-slider[data-dragging] .hn-slider-track,
 .hn-volume-slider[data-dragging] .hn-slider-track {
   height: 6px;
-  background: rgb(255 255 255 / 0.3);
 }
 
 .hn-time-slider:hover .hn-slider-thumb,
 .hn-volume-slider:hover .hn-slider-thumb,
 .hn-time-slider[data-dragging] .hn-slider-thumb,
 .hn-volume-slider[data-dragging] .hn-slider-thumb {
-  transform: translate(-50%, -50%) scale(1);
-}
-
-.hn-time-slider[data-dragging] .hn-slider-thumb,
-.hn-volume-slider[data-dragging] .hn-slider-thumb {
-  transform: translate(-50%, -50%) scale(1.15);
+  transform: translate(-50%, -50%) scaleY(1);
 }
 
 /* Slider preview (thumbnail + time on hover scrub) — hidden at rest so
