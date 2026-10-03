@@ -19,13 +19,13 @@
           type="text"
           class="hn-source-input"
           data-hn-source-input
-          placeholder="Paste a video URL to load (.m3u8, .mpd, .mp4, .webm, or any URL with a known type below)…"
+          placeholder="Paste a video URL to load (.m3u8, .txt HLS, .mpd, .mp4, .webm, or any URL with a known type below)…"
           autocomplete="off"
           spellcheck="false"
         />
         <select class="hn-source-type" data-hn-source-type aria-label="Source type">
           <option value="">Auto-detect from URL</option>
-          <option value="application/x-mpegurl">HLS (.m3u8)</option>
+          <option value="application/x-mpegurl">HLS (.m3u8 / .txt)</option>
           <option value="application/dash+xml">DASH (.mpd)</option>
           <option value="video/mp4">MP4</option>
           <option value="video/webm">WebM</option>

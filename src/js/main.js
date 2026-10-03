@@ -20,6 +20,22 @@ const ASS_TRACK = {
   src: './sample/sample.ass',
 };
 
+const HLS_MIME = 'application/x-mpegurl';
+
+// Some HLS origins expose playlists as `index.txt` instead of `.m3u8` and
+// may use misleading extensions for MPEG-TS segments. Vidstack can play
+// these playlists when the HLS MIME type is supplied explicitly.
+function sourceForPlayer(url, type = '') {
+  if (type) return { src: url, type };
+
+  const path = url.split(/[?#]/, 1)[0].toLowerCase();
+  if (path.endsWith('.m3u8') || path.endsWith('.txt')) {
+    return { src: url, type: HLS_MIME };
+  }
+
+  return url;
+}
+
 async function main() {
   await customElements.whenDefined('media-player');
 
@@ -77,9 +93,10 @@ async function main() {
     event.preventDefault();
     const url = sourceInput?.value.trim();
     if (!url) return;
-    const type = sourceType?.value || undefined;
-    player.src = type ? { src: url, type } : url;
+    player.src = sourceForPlayer(url, sourceType?.value || '');
   });
 }
+
+export { sourceForPlayer };
 
 main();
