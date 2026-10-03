@@ -373,16 +373,16 @@ body {
 }
 
 .hn-icon {
-  width: 23px;
-  height: 23px;
+  width: 24px;
+  height: 24px;
   pointer-events: none;
   flex-shrink: 0;
   color: var(--hn-text);
 }
 
 .hn-icon--chev {
-  width: 17px;
-  height: 17px;
+  width: 18px;
+  height: 18px;
   margin-left: auto;
   color: var(--hn-text);
 }
@@ -921,7 +921,7 @@ media-mute-button[data-state='muted'] .hn-volume-mute {
 }
 
 .hn-player:not([data-hn-controls-idle]) .hn-captions {
-  opacity: 0.18;
+  opacity: 0.35;
 }
 
 .hn-captions [data-part='cue'] {
@@ -944,5 +944,5 @@ media-mute-button[data-state='muted'] .hn-volume-mute {
 }
 
 .hn-player:not([data-hn-controls-idle]) video ~ canvas.JASSUB {
-  opacity: 0.18;
+  opacity: 0.35;
 }

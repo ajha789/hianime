@@ -61,6 +61,32 @@ async function main() {
   }
   resetControlsIdle();
 
+  const interactivePlayerTargets = [
+    'button',
+    'a',
+    'input',
+    'select',
+    'textarea',
+    '[role="button"]',
+    '[role="slider"]',
+    '[role="radio"]',
+    '[role="menuitem"]',
+    '[role="menuitemradio"]',
+    'media-time-slider',
+    'media-volume-slider',
+    'media-menu',
+    '.hn-time-slider',
+    '.hn-volume-slider',
+  ].join(', ');
+  player.addEventListener('click', (event) => {
+    if (!(event.target instanceof Element) || event.target.closest(interactivePlayerTargets)) return;
+    if (player.paused) {
+      player.play().catch((error) => console.warn('Could not start playback from the player surface:', error));
+    } else {
+      player.pause();
+    }
+  });
+
   let subtitleTracks = [];
   let subtitleBlobUrls = new Set();
   let subtitleRequest = 0;
