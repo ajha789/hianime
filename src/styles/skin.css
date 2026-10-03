@@ -65,10 +65,23 @@ body {
   background: black;
 }
 
-.hn-poster {
-  display: block;
+/* --------------------------------------------------------------------
+   Overlay layers — media-provider's only real flex-flow child should be
+   the <video> itself. Every other direct child of media-player (poster,
+   captions, buffering indicator, controls, gestures) is an overlay and
+   must be taken out of flex flow, or it fights the video for width.
+   -------------------------------------------------------------------- */
+
+.hn-poster,
+.hn-captions,
+.hn-buffering,
+.hn-gesture {
   position: absolute;
   inset: 0;
+}
+
+.hn-poster {
+  display: block;
   width: 100%;
   height: 100%;
   z-index: 1;
@@ -132,12 +145,14 @@ body {
    -------------------------------------------------------------------- */
 
 .hn-controls {
-  position: relative;
+  position: absolute;
+  inset: 0;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   height: 100%;
   width: 100%;
+  z-index: 10;
   padding: 0 18px 14px;
   background: linear-gradient(
     to top,
