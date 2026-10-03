@@ -55,6 +55,15 @@ async function main() {
     const next = autoplayToggle.getAttribute('aria-pressed') !== 'true';
     autoplayToggle.setAttribute('aria-pressed', String(next));
   });
+
+  const volumeValue = player.querySelector('[data-hn-volume-value]');
+  const updateVolumeValue = () => {
+    if (volumeValue) {
+      volumeValue.textContent = player.muted ? '0%' : `${Math.round(player.volume * 100)}%`;
+    }
+  };
+  player.addEventListener('volume-change', updateVolumeValue);
+  updateVolumeValue();
 }
 
 main();

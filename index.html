@@ -17,7 +17,7 @@
       <media-player
         class="hn-player"
         title="Sample Episode"
-        src="./sample/sample.webm"
+        src="./sample/hls/master.m3u8"
         poster="./sample/poster.jpg"
         crossorigin
         playsinline
@@ -203,8 +203,11 @@
                   </svg>
                 </media-menu-button>
                 <media-menu-items class="hn-menu-items" placement="top end" offset="30">
-                  <div class="hn-settings-row">
-                    <span class="hn-menu-item-label">Volume</span>
+                  <div class="hn-settings-row hn-settings-row--boost">
+                    <div class="hn-settings-row-head">
+                      <span class="hn-menu-item-label">Audio Boost</span>
+                      <span class="hn-settings-value" data-hn-volume-value>100%</span>
+                    </div>
                     <media-volume-slider class="hn-volume-slider hn-volume-slider--settings">
                       <div class="hn-slider-track" slot="track"></div>
                       <div class="hn-slider-track-fill hn-slider-track-fill--progress" slot="track-fill"></div>
@@ -226,12 +229,7 @@
                   <div class="hn-menu-divider"></div>
 
                   <media-menu class="hn-submenu">
-                    <media-menu-button class="hn-menu-item">
-                      <svg class="hn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
-                        <rect width="20" height="14" x="2" y="3" rx="2"/>
-                        <line x1="8" x2="16" y1="21" y2="21"/>
-                        <line x1="12" x2="12" y1="17" y2="21"/>
-                      </svg>
+                    <media-menu-button class="hn-menu-item hn-menu-item--no-icon">
                       <span class="hn-menu-item-label">Quality</span>
                       <svg class="hn-icon hn-icon--chev" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -240,11 +238,12 @@
                     <media-menu-items class="hn-menu-items">
                       <media-quality-radio-group class="hn-radio-group">
                         <template>
-                          <media-radio class="hn-radio">
+                          <media-radio class="hn-radio hn-radio--quality">
                             <svg class="hn-radio-check" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                               <path d="M4 12.611L8.923 17.5L20 6.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
                             <span class="hn-radio-label" data-part="label"></span>
+                            <span class="hn-radio-bitrate" data-part="bitrate"></span>
                           </media-radio>
                         </template>
                       </media-quality-radio-group>

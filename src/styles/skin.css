@@ -15,6 +15,7 @@
   --hn-brand-2: #ffffff;
   --hn-brand-contrast: #0a0a0b;
   --hn-accent-on: #ff6a00;
+  --hn-slider-red: #e5202e;
   --hn-focus: 0 0 0 2px rgb(255 255 255 / 0.55);
   --hn-radius: 0px;
 
@@ -258,17 +259,15 @@ body {
   border: none;
   background: none;
   border-radius: 6px;
-  color: var(--hn-text-dim);
+  color: var(--hn-text);
   cursor: pointer;
-  opacity: 0.85;
-  transition: background-color 0.15s ease, color 0.15s ease, opacity 0.15s ease;
+  transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 .hn-btn:hover,
 .hn-btn:focus-visible {
   background: rgb(255 255 255 / 0.1);
   color: var(--hn-text);
-  opacity: 1;
 }
 
 .hn-btn:active {
@@ -282,7 +281,7 @@ body {
 
 .hn-btn:disabled:hover {
   background: none;
-  color: var(--hn-text-dim);
+  color: var(--hn-text);
 }
 
 .hn-btn--text {
@@ -298,13 +297,14 @@ body {
   height: 22px;
   pointer-events: none;
   flex-shrink: 0;
+  color: var(--hn-text);
 }
 
 .hn-icon--chev {
   width: 16px;
   height: 16px;
   margin-left: auto;
-  opacity: 0.6;
+  color: var(--hn-text);
 }
 
 .hn-icon--spin-on-open {
@@ -427,7 +427,7 @@ media-mute-button[data-state='muted'] .hn-volume-mute {
 }
 
 .hn-slider-track-fill--progress {
-  background: var(--hn-brand-2);
+  background: var(--hn-slider-red);
   width: var(--slider-fill, 0%);
   z-index: 2;
 }
@@ -445,7 +445,7 @@ media-mute-button[data-state='muted'] .hn-volume-mute {
   width: 3px;
   height: 14px;
   border-radius: 0;
-  background: var(--hn-brand-2);
+  background: var(--hn-slider-red);
   box-shadow: 0 0 0 1px rgb(0 0 0 / 0.4);
   transform: translate(-50%, -50%) scaleY(0);
   transition: transform 0.12s ease;
@@ -577,6 +577,24 @@ media-mute-button[data-state='muted'] .hn-volume-mute {
   opacity: 1;
 }
 
+.hn-radio--quality {
+  justify-content: flex-start;
+}
+
+.hn-radio-bitrate {
+  margin-left: auto;
+  padding-left: 10px;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  color: var(--hn-text-dim);
+}
+
+/* Settings submenu rows without a leading icon still line up with the
+   ones that have one. */
+.hn-menu-item--no-icon {
+  padding-left: 10px;
+}
+
 /* Two-column Audio / Subtitles panel -------------------------------- */
 
 .hn-menu-items--tracks {
@@ -666,6 +684,26 @@ media-mute-button[data-state='muted'] .hn-volume-mute {
   cursor: default;
 }
 
+.hn-settings-row--boost {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+  padding: 12px 10px 14px;
+}
+
+.hn-settings-row-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.hn-settings-value {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  color: var(--hn-text-dim);
+}
+
 .hn-settings-row--toggle {
   cursor: pointer;
 }
@@ -677,7 +715,7 @@ media-mute-button[data-state='muted'] .hn-volume-mute {
 }
 
 .hn-volume-slider--settings {
-  width: 110px;
+  width: 100%;
   height: 24px;
 }
 
