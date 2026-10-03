@@ -2,7 +2,7 @@
 // documents in-browser and rendered through the existing JASSUB/libass WASM.
 import 'vidstack/player';
 import 'vidstack/player/ui';
-import { LibASSTextRenderer } from 'vidstack';
+import { LibASSTextRenderer, TextTrack } from 'vidstack';
 import jassubWorkerUrl from 'jassub/dist/worker/worker.js?worker&url';
 import { vttToAss } from './vtt-to-ass.js';
 
@@ -90,7 +90,7 @@ async function main() {
       return null;
     }
 
-    const track = player.textTracks.add({
+    const track = new TextTrack({
       kind: 'subtitles',
       label,
       language,
@@ -98,6 +98,7 @@ async function main() {
       src: trackSrc,
       default: isDefault,
     });
+    player.textTracks.add(track);
     subtitleTracks.push(track);
     if (isDefault) track.mode = 'showing';
     return track;
