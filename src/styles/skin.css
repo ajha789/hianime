@@ -15,7 +15,7 @@
   --hn-brand-2: #ffffff;
   --hn-brand-contrast: #0a0a0b;
   --hn-focus: 0 0 0 2px rgb(255 255 255 / 0.55);
-  --hn-radius: 2px;
+  --hn-radius: 0px;
 
   /* Map our brand onto vidstack's own css variables so built-in
      behaviours (focus rings, hover states, live badge, etc.) follow suit. */
@@ -256,7 +256,7 @@ body {
   padding: 6px;
   border: none;
   background: none;
-  border-radius: var(--hn-radius);
+  border-radius: 6px;
   color: var(--hn-text-dim);
   cursor: pointer;
   opacity: 0.85;
@@ -520,10 +520,10 @@ media-mute-button[data-state='muted'] .hn-volume-mute {
   align-items: center;
   gap: 8px;
   width: 100%;
-  padding: 9px 10px;
+  padding: 8px 10px;
   border-radius: var(--hn-radius);
   color: var(--hn-text);
-  font-size: 13px;
+  font-size: 12px;
   cursor: pointer;
 }
 
@@ -550,7 +550,7 @@ media-mute-button[data-state='muted'] .hn-volume-mute {
   gap: 8px;
   padding: 8px 10px;
   border-radius: var(--hn-radius);
-  font-size: 13px;
+  font-size: 12px;
   color: var(--hn-text-dim);
   cursor: pointer;
 }
@@ -601,10 +601,12 @@ media-mute-button[data-state='muted'] .hn-volume-mute {
 .hn-track-column-header {
   position: sticky;
   top: 0;
-  padding: 14px 16px 10px;
-  font-size: 15px;
-  font-weight: 800;
-  color: var(--hn-text);
+  padding: 12px 14px 8px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  color: var(--hn-text-dim);
   background: var(--hn-surface);
 }
 
@@ -623,7 +625,7 @@ media-mute-button[data-state='muted'] .hn-volume-mute {
   justify-content: space-between;
   padding: 10px 10px;
   color: var(--hn-text);
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .hn-radio--track[aria-checked='true'] {
@@ -656,7 +658,7 @@ media-mute-button[data-state='muted'] .hn-volume-mute {
   background: none;
   border-radius: var(--hn-radius);
   color: var(--hn-text);
-  font-size: 13px;
+  font-size: 12px;
   cursor: default;
 }
 
