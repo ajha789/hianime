@@ -180,26 +180,32 @@ body {
    -------------------------------------------------------------------- */
 
 .hn-buffering-icon {
-  width: var(--media-buffering-size, 52px);
-  height: var(--media-buffering-size, 52px);
+  width: var(--media-buffering-size, 88px);
+  height: var(--media-buffering-size, 88px);
   color: var(--hn-text);
-  filter: drop-shadow(0 2px 10px rgb(0 0 0 / 0.6));
+  filter: drop-shadow(0 2px 14px rgb(0 0 0 / 0.65));
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+/* Hidden entirely at rest -- only shown while the player is actually
+   buffering, and gone the moment the stream has enough data to play. */
+:where([data-buffering]) .hn-buffering-icon {
+  opacity: 1;
 }
 
 .hn-buffering-track {
-  opacity: 0.22;
+  opacity: 0.25;
 }
 
 .hn-buffering-arc {
-  opacity: 0;
-  color: var(--hn-text);
-  stroke-dasharray: 34 163.4;
+  color: var(--hn-slider-red);
+  stroke-dasharray: 31 119.8;
   stroke-dashoffset: 0;
   transform-origin: 32px 32px;
 }
 
 :where([data-buffering]) .hn-buffering-arc {
-  opacity: 1;
   animation: hn-spin 0.9s linear infinite;
 }
 
