@@ -1,0 +1,35 @@
+{
+  "name": "hianime-player",
+  "version": "1.0.0",
+  "description": "Custom Crunchyroll-inspired video player UI, built on Vidstack, with fansub-style ASS subtitle rendering",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ajha789/hianime.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ajha789/hianime/issues"
+  },
+  "homepage": "https://github.com/ajha789/hianime#readme",
+  "type": "module",
+  "private": "true",
+  "dependencies": {
+    "jassub": "^2.5.16",
+    "vidstack": "^1.15.6"
+  },
+  "devDependencies": {
+    "@tabler/icons": "^3.48.0",
+    "lucide-static": "^1.51.0",
+    "playwright-core": "^1.63.0",
+    "vite": "^8.3.2"
+  }
+}

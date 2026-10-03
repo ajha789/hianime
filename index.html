@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hianime Player</title>
+    <link rel="stylesheet" href="/vendor/vidstack/styles/base.css" />
+    <link rel="stylesheet" href="/vendor/vidstack/styles/default/theme.css" />
+    <link rel="stylesheet" href="/vendor/vidstack/styles/default/layouts/video.css" />
+    <link rel="stylesheet" href="/src/styles/skin.css" />
+  <body>
+    <main class="demo-page">
+      <h1 class="demo-title">Hianime Player</h1>
+      <p class="demo-subtitle">Custom skin built on Vidstack primitives, with libass-accurate (JASSUB) fansub subtitle rendering.</p>
+
+      <media-player
+        class="hn-player"
+        title="Sample Episode"
+        src="/sample/sample.mp4"
+        poster="/sample/poster.jpg"
+        crossorigin
+        playsinline
+      >
+        <media-provider>
+          <media-poster class="hn-poster" alt="Episode poster"></media-poster>
+        </media-provider>
+
+        <!-- Native text tracks kept for fallback / non-ASS subs -->
+        <track
+          src="/sample/sample.vtt"
+          kind="subtitles"
+          label="English (VTT)"
+          srclang="en"
+        />
+
+        <media-buffering-indicator class="hn-buffering">
+          <img src="/assets/icons/buffering-spinner.svg" class="hn-buffering-icon" alt="" />
+        </media-buffering-indicator>
+
+        <!--
+          Vidstack picks exactly one renderer for the active subtitle track:
+          LibASSTextRenderer (wired up in main.js) for .ass/.ssa tracks, or
+          this native <media-captions> renderer for everything else.
+        -->
+        <media-captions class="hn-captions"></media-captions>
+
+        <div class="hn-gesture-layer">
+          <media-gesture class="hn-gesture" event="pointerup" action="toggle:paused"></media-gesture>
+          <media-gesture class="hn-gesture" event="dblpointerup" action="toggle:fullscreen"></media-gesture>
+        </div>
+
+        <div class="hn-controls" slot="controls">
+          <div class="hn-controls-spacer"></div>
+
+          <div class="hn-controls-bottom">
+            <media-time-slider class="hn-time-slider">
+              <div class="hn-slider-track" slot="track"></div>
+              <div class="hn-slider-track-fill hn-slider-track-fill--progress" slot="track-fill"></div>
+              <div class="hn-slider-track-fill hn-slider-track-fill--buffered" slot="progress"></div>
+              <div class="hn-slider-thumb" slot="thumb"></div>
+              <media-slider-preview class="hn-slider-preview" no-clamp>
+                <media-slider-thumbnail class="hn-preview-thumbnail"></media-slider-thumbnail>
+                <div class="hn-preview-time">
+                  <media-slider-value></media-slider-value>
+                </div>
+              </media-slider-preview>
+            </media-time-slider>
+
+            <div class="hn-controls-row">
+              <media-play-button class="hn-btn hn-btn--play">
+                <img src="/assets/icons/play.svg" class="hn-icon hn-icon--play" alt="" />
+                <img src="/assets/icons/pause.svg" class="hn-icon hn-icon--pause" alt="" />
+                <img src="/assets/icons/replay.svg" class="hn-icon hn-icon--replay" alt="" />
+              </media-play-button>
+
+              <media-mute-button class="hn-btn hn-btn--volume">
+                <img src="/assets/icons/volume-muted.svg" class="hn-icon hn-icon--vol-muted" alt="" />
+                <img src="/assets/icons/volume-low.svg" class="hn-icon hn-icon--vol-low" alt="" />
+                <img src="/assets/icons/volume-high.svg" class="hn-icon hn-icon--vol-high" alt="" />
+              </media-mute-button>
+              <media-volume-slider class="hn-volume-slider">
+                <div class="hn-slider-track" slot="track"></div>
+                <div class="hn-slider-track-fill hn-slider-track-fill--progress" slot="track-fill"></div>
+                <div class="hn-slider-thumb" slot="thumb"></div>
+              </media-volume-slider>
+
+              <div class="hn-time">
+                <media-time class="hn-time-current" type="current"></media-time>
+                <span class="hn-time-sep">/</span>
+                <media-time class="hn-time-duration" type="duration"></media-time>
+              </div>
+
+              <media-chapter-title class="hn-chapter-title"></media-chapter-title>
+
+              <div class="hn-controls-spacer-row"></div>
+
+              <media-menu class="hn-menu hn-menu--subs">
+                <media-menu-button class="hn-btn hn-btn--menu" aria-label="Subtitles">
+                  <img src="/assets/icons/subtitles-on.svg" class="hn-icon" alt="" />
+                </media-menu-button>
+                <media-menu-items class="hn-menu-items" placement="top end">
+                  <media-captions-radio-group class="hn-radio-group">
+                    <template>
+                      <media-radio class="hn-radio">
+                        <img src="/assets/icons/check.svg" class="hn-radio-check" alt="" />
+                        <span class="hn-radio-label" data-part="label"></span>
+                      </media-radio>
+                    </template>
+                  </media-captions-radio-group>
+                </media-menu-items>
+              </media-menu>
+
+              <media-menu class="hn-menu hn-menu--settings">
+                <media-menu-button class="hn-btn hn-btn--menu" aria-label="Settings">
+                  <img src="/assets/icons/settings.svg" class="hn-icon hn-icon--spin-on-open" alt="" />
+                </media-menu-button>
+                <media-menu-items class="hn-menu-items" placement="top end">
+                  <media-menu class="hn-submenu">
+                    <media-menu-button class="hn-menu-item">
+                      <img src="/assets/icons/speed.svg" class="hn-icon" alt="" />
+                      <span class="hn-menu-item-label">Speed</span>
+                      <img src="/assets/icons/chevron-right.svg" class="hn-icon hn-icon--chev" alt="" />
+                    </media-menu-button>
+                    <media-menu-items class="hn-menu-items">
+                      <media-speed-radio-group class="hn-radio-group">
+                        <template>
+                          <media-radio class="hn-radio">
+                            <img src="/assets/icons/check.svg" class="hn-radio-check" alt="" />
+                            <span class="hn-radio-label" data-part="label"></span>
+                          </media-radio>
+                        </template>
+                      </media-speed-radio-group>
+                    </media-menu-items>
+                  </media-menu>
+
+                  <media-menu class="hn-submenu">
+                    <media-menu-button class="hn-menu-item">
+                      <img src="/assets/icons/chapters.svg" class="hn-icon" alt="" />
+                      <span class="hn-menu-item-label">Quality</span>
+                      <img src="/assets/icons/chevron-right.svg" class="hn-icon hn-icon--chev" alt="" />
+                    </media-menu-button>
+                    <media-menu-items class="hn-menu-items">
+                      <media-quality-radio-group class="hn-radio-group">
+                        <template>
+                          <media-radio class="hn-radio">
+                            <img src="/assets/icons/check.svg" class="hn-radio-check" alt="" />
+                            <span class="hn-radio-label" data-part="label"></span>
+                          </media-radio>
+                        </template>
+                      </media-quality-radio-group>
+                    </media-menu-items>
+                  </media-menu>
+                </media-menu-items>
+              </media-menu>
+
+              <media-pip-button class="hn-btn">
+                <img src="/assets/icons/pip-enter.svg" class="hn-icon hn-icon--pip-enter" alt="" />
+                <img src="/assets/icons/pip-exit.svg" class="hn-icon hn-icon--pip-exit" alt="" />
+              </media-pip-button>
+
+              <media-fullscreen-button class="hn-btn">
+                <img src="/assets/icons/fullscreen-enter.svg" class="hn-icon hn-icon--fs-enter" alt="" />
+                <img src="/assets/icons/fullscreen-exit.svg" class="hn-icon hn-icon--fs-exit" alt="" />
+              </media-fullscreen-button>
+            </div>
+          </div>
+        </div>
+      </media-player>
+    </main>
+
+    <script type="module" src="/src/js/main.js"></script>
+  </body>
+</html>

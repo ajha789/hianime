@@ -1,0 +1,462 @@
+/* ==========================================================================
+   Hianime Player — custom skin built on top of Vidstack's primitive
+   elements (vendor/vidstack). Crunchyroll-inspired dark theme + a fansub
+   subtitle look. All vidstack behaviour comes from vendor/vidstack; this
+   file only restyles it and swaps in our own icons/markup.
+   ========================================================================== */
+
+:root {
+  --hn-bg: #0b0d12;
+  --hn-surface: #15181f;
+  --hn-surface-2: #1d212b;
+  --hn-text: #f5f6f8;
+  --hn-text-dim: #9aa0ab;
+  --hn-brand: #ff6b1f;
+  --hn-brand-2: #ff8a3d;
+  --hn-brand-contrast: #141414;
+  --hn-focus: 0 0 0 3px rgb(255 107 31 / 0.45);
+
+  /* Map our brand onto vidstack's own css variables so built-in
+     behaviours (focus rings, hover states, live badge, etc.) follow suit. */
+  --media-brand: var(--hn-brand);
+  --media-focus-ring-color: var(--hn-brand);
+  --media-focus-ring: var(--hn-focus);
+}
+
+body {
+  margin: 0;
+  background: var(--hn-bg);
+  color: var(--hn-text);
+  font-family: 'Trebuchet MS', 'Segoe UI', system-ui, sans-serif;
+}
+
+.demo-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 48px 20px 80px;
+}
+
+.demo-title {
+  font-size: 28px;
+  font-weight: 800;
+  margin: 0 0 4px;
+  letter-spacing: 0.3px;
+}
+
+.demo-subtitle {
+  color: var(--hn-text-dim);
+  margin: 0 0 28px;
+  font-size: 14px;
+}
+
+/* --------------------------------------------------------------------
+   Player shell
+   -------------------------------------------------------------------- */
+
+.hn-player {
+  --media-button-icon-size: 60%;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow:
+    0 20px 60px rgb(0 0 0 / 0.55),
+    0 0 0 1px rgb(255 255 255 / 0.04);
+  background: black;
+}
+
+.hn-poster {
+  object-fit: cover;
+}
+
+/* --------------------------------------------------------------------
+   Buffering — custom dual-ring spinner, not vidstack's default
+   -------------------------------------------------------------------- */
+
+.hn-buffering-icon {
+  width: var(--media-buffering-size, 84px);
+  height: var(--media-buffering-size, 84px);
+  color: var(--hn-brand);
+  filter: drop-shadow(0 2px 10px rgb(255 107 31 / 0.35));
+}
+
+:where([data-buffering]) .hn-buffering-icon {
+  animation: hn-spin 1.1s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+}
+
+@keyframes hn-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion) {
+  :where([data-buffering]) .hn-buffering-icon {
+    animation-duration: 6s;
+  }
+}
+
+/* --------------------------------------------------------------------
+   Gesture layer (tap to play/pause, double-tap to fullscreen)
+   -------------------------------------------------------------------- */
+
+.hn-gesture-layer {
+  display: contents;
+}
+
+/* --------------------------------------------------------------------
+   Controls
+   -------------------------------------------------------------------- */
+
+.hn-controls {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 100%;
+  width: 100%;
+  padding: 10px 18px 14px;
+  background: linear-gradient(
+    to top,
+    rgb(0 0 0 / 0.85) 0%,
+    rgb(0 0 0 / 0.55) 40%,
+    rgb(0 0 0 / 0) 100%
+  );
+  box-sizing: border-box;
+}
+
+.hn-controls-spacer {
+  flex: 1 1 auto;
+}
+
+.hn-controls-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.hn-controls-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.hn-controls-spacer-row {
+  flex: 1 1 auto;
+}
+
+/* Buttons --------------------------------------------------------------- */
+
+.hn-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  color: var(--hn-text);
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.15s ease;
+}
+
+.hn-btn:hover {
+  background: rgb(255 255 255 / 0.1);
+}
+
+.hn-btn:active {
+  transform: scale(0.92);
+}
+
+.hn-btn--play {
+  width: 42px;
+  height: 42px;
+}
+
+.hn-icon {
+  width: 20px;
+  height: 20px;
+  filter: invert(1) brightness(1.5);
+  pointer-events: none;
+}
+
+.hn-btn--play .hn-icon {
+  width: 22px;
+  height: 22px;
+}
+
+.hn-icon--chev {
+  width: 14px;
+  height: 14px;
+  margin-left: auto;
+  opacity: 0.6;
+}
+
+.hn-icon--spin-on-open {
+  transition: transform 0.25s ease;
+}
+
+media-menu-button[aria-expanded='true'] .hn-icon--spin-on-open {
+  transform: rotate(45deg);
+}
+
+/* Toggle-button icon states — each button renders every icon variant as a
+   plain child and we show/hide by the state attributes Vidstack sets on
+   the button element itself (data-paused, data-muted, data-active, ...). */
+
+media-play-button:not([data-paused]) .hn-icon--play,
+media-play-button[data-ended] .hn-icon--play,
+media-play-button[data-paused] .hn-icon--pause,
+media-play-button[data-ended] .hn-icon--pause,
+media-play-button:not([data-ended]) .hn-icon--replay {
+  display: none;
+}
+
+media-mute-button:not([data-muted]) .hn-icon--vol-muted,
+media-mute-button[data-muted] .hn-icon--vol-low,
+media-mute-button[data-muted] .hn-icon--vol-high,
+media-mute-button:not([data-state='low']) .hn-icon--vol-low,
+media-mute-button:not([data-state='high']) .hn-icon--vol-high {
+  display: none;
+}
+
+media-pip-button[data-active] .hn-icon--pip-enter,
+media-pip-button:not([data-active]) .hn-icon--pip-exit {
+  display: none;
+}
+
+media-fullscreen-button[data-active] .hn-icon--fs-enter,
+media-fullscreen-button:not([data-active]) .hn-icon--fs-exit {
+  display: none;
+}
+
+/* Time ------------------------------------------------------------------ */
+
+.hn-time {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  color: var(--hn-text);
+  padding: 0 4px;
+  white-space: nowrap;
+}
+
+.hn-time-sep {
+  color: var(--hn-text-dim);
+}
+
+.hn-chapter-title {
+  color: var(--hn-text-dim);
+  font-size: 13px;
+  padding-left: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Sliders ----------------------------------------------------------------
+   media-time-slider / media-volume-slider render as unstyled custom
+   elements with named slots — we provide our own track/fill/thumb parts. */
+
+.hn-time-slider,
+.hn-volume-slider {
+  --media-slider-height: 4px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 18px;
+  cursor: pointer;
+  touch-action: none;
+}
+
+.hn-time-slider {
+  width: 100%;
+}
+
+.hn-volume-slider {
+  width: 72px;
+}
+
+.hn-slider-track {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 4px;
+  border-radius: 2px;
+  background: rgb(255 255 255 / 0.22);
+  transition: height 0.12s ease;
+}
+
+.hn-slider-track-fill {
+  position: absolute;
+  left: 0;
+  height: 4px;
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+.hn-slider-track-fill--progress {
+  background: var(--hn-brand);
+  width: var(--slider-fill, 0%);
+  z-index: 2;
+}
+
+.hn-slider-track-fill--buffered {
+  background: rgb(255 255 255 / 0.3);
+  width: var(--slider-progress, 0%);
+  z-index: 1;
+}
+
+.hn-slider-thumb {
+  position: absolute;
+  top: 50%;
+  left: var(--slider-fill, 0%);
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: var(--hn-brand-2);
+  box-shadow: 0 0 0 3px rgb(255 107 31 / 0.25);
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.12s ease;
+  z-index: 3;
+}
+
+.hn-time-slider:hover .hn-slider-track,
+.hn-volume-slider:hover .hn-slider-track,
+.hn-time-slider[data-dragging] .hn-slider-track,
+.hn-volume-slider[data-dragging] .hn-slider-track {
+  height: 6px;
+}
+
+.hn-time-slider:hover .hn-slider-thumb,
+.hn-volume-slider:hover .hn-slider-thumb,
+.hn-time-slider[data-dragging] .hn-slider-thumb,
+.hn-volume-slider[data-dragging] .hn-slider-thumb {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* Slider preview (thumbnail + time on hover scrub) */
+
+.hn-slider-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  pointer-events: none;
+}
+
+.hn-preview-thumbnail {
+  border-radius: 6px;
+  overflow: hidden;
+  border: 2px solid rgb(255 255 255 / 0.2);
+  background: var(--hn-surface);
+  box-shadow: 0 6px 18px rgb(0 0 0 / 0.5);
+}
+
+.hn-preview-time {
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  background: rgb(0 0 0 / 0.85);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+/* --------------------------------------------------------------------
+   Menus (subtitles / settings)
+   -------------------------------------------------------------------- */
+
+.hn-menu-items {
+  background: var(--hn-surface);
+  border: 1px solid rgb(255 255 255 / 0.08);
+  border-radius: 10px;
+  padding: 6px;
+  min-width: 220px;
+  box-shadow: 0 12px 32px rgb(0 0 0 / 0.5);
+}
+
+.hn-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 9px 10px;
+  border-radius: 7px;
+  color: var(--hn-text);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.hn-menu-item:hover,
+.hn-menu-item:focus-visible,
+.hn-menu-item[data-focus] {
+  background: var(--hn-surface-2);
+  outline: none;
+}
+
+.hn-menu-item-label {
+  flex: 1;
+  text-align: left;
+}
+
+.hn-radio-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.hn-radio {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 7px;
+  font-size: 13px;
+  color: var(--hn-text-dim);
+  cursor: pointer;
+}
+
+.hn-radio:hover,
+.hn-radio[data-focus] {
+  background: var(--hn-surface-2);
+}
+
+.hn-radio-check {
+  width: 14px;
+  height: 14px;
+  opacity: 0;
+  filter: invert(55%) sepia(80%) saturate(2000%) hue-rotate(345deg);
+}
+
+.hn-radio[aria-checked='true'] {
+  color: var(--hn-text);
+}
+
+.hn-radio[aria-checked='true'] .hn-radio-check {
+  opacity: 1;
+}
+
+/* --------------------------------------------------------------------
+   Native WebVTT captions — restyled with a fansub-ish bold/outlined look
+   so they match the look of the ASS overlay when no .ass track exists.
+   -------------------------------------------------------------------- */
+
+.hn-captions {
+  --media-cue-color: #ffffff;
+  --media-cue-bg: transparent;
+  --media-cue-font-size: calc(var(--overlay-height) / 100 * 5.2);
+  --media-cue-display-padding: 0;
+  --media-cue-text-shadow:
+    -1.5px -1.5px 0 #000, 1.5px -1.5px 0 #000, -1.5px 1.5px 0 #000, 1.5px 1.5px 0 #000,
+    0 2px 6px rgb(0 0 0 / 0.8);
+}
+
+.hn-captions [data-part='cue'] {
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+/* --------------------------------------------------------------------
+   ASS overlay — LibASSTextRenderer (main.js) has JASSUB inject its own
+   canvas as a sibling of the <video>; just make sure it never eats clicks.
+   -------------------------------------------------------------------- */
+
+.hn-player video ~ canvas {
+  pointer-events: none;
+}

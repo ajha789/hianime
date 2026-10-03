@@ -1,0 +1,1 @@
+import{VideoProvider as e}from"../chunks/vidstack-D1Fg9ecc.js";export{e as VideoProvider};
