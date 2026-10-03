@@ -6,15 +6,16 @@
    ========================================================================== */
 
 :root {
-  --hn-bg: #0b0d12;
-  --hn-surface: #15181f;
-  --hn-surface-2: #1d212b;
-  --hn-text: #f5f6f8;
-  --hn-text-dim: #9aa0ab;
-  --hn-brand: #c8102e;
-  --hn-brand-2: #e63950;
-  --hn-brand-contrast: #141414;
-  --hn-focus: 0 0 0 3px rgb(200 16 46 / 0.45);
+  --hn-bg: #0a0a0b;
+  --hn-surface: #161616;
+  --hn-surface-2: #212123;
+  --hn-text: #ffffff;
+  --hn-text-dim: #8a8a8e;
+  --hn-brand: #e8e8ea;
+  --hn-brand-2: #ffffff;
+  --hn-brand-contrast: #0a0a0b;
+  --hn-focus: 0 0 0 2px rgb(255 255 255 / 0.55);
+  --hn-radius: 2px;
 
   /* Map our brand onto vidstack's own css variables so built-in
      behaviours (focus rings, hover states, live badge, etc.) follow suit. */
@@ -57,11 +58,11 @@ body {
   --media-button-icon-size: 60%;
   width: 100%;
   max-width: 100%;
-  border-radius: 14px;
+  border-radius: var(--hn-radius);
   overflow: hidden;
   box-shadow:
-    0 20px 60px rgb(0 0 0 / 0.55),
-    0 0 0 1px rgb(255 255 255 / 0.04);
+    0 20px 60px rgb(0 0 0 / 0.65),
+    0 0 0 1px rgb(255 255 255 / 0.06);
   background: black;
 }
 
@@ -119,19 +120,19 @@ body {
    -------------------------------------------------------------------- */
 
 .hn-buffering-icon {
-  width: var(--media-buffering-size, 56px);
-  height: var(--media-buffering-size, 56px);
-  color: var(--hn-brand);
-  filter: drop-shadow(0 2px 10px rgb(200 16 46 / 0.45));
+  width: var(--media-buffering-size, 52px);
+  height: var(--media-buffering-size, 52px);
+  color: var(--hn-text);
+  filter: drop-shadow(0 2px 10px rgb(0 0 0 / 0.6));
 }
 
 .hn-buffering-track {
-  opacity: 0.18;
+  opacity: 0.22;
 }
 
 .hn-buffering-arc {
   opacity: 0;
-  color: var(--hn-brand-2);
+  color: var(--hn-text);
   stroke-dasharray: 34 163.4;
   stroke-dashoffset: 0;
   transform-origin: 32px 32px;
@@ -206,8 +207,9 @@ body {
 .hn-rating-badge-tag {
   flex-shrink: 0;
   padding: 7px 10px;
-  border-radius: 6px;
-  background: rgb(255 255 255 / 0.18);
+  border-radius: var(--hn-radius);
+  border: 1px solid rgb(255 255 255 / 0.25);
+  background: rgb(255 255 255 / 0.1);
   backdrop-filter: blur(4px);
   font-size: 13px;
   font-weight: 800;
@@ -229,7 +231,7 @@ body {
 .hn-controls-bottom {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 10px;
 }
 
 .hn-controls-row {
@@ -254,7 +256,7 @@ body {
   padding: 6px;
   border: none;
   background: none;
-  border-radius: 9999px;
+  border-radius: var(--hn-radius);
   color: var(--hn-text-dim);
   cursor: pointer;
   opacity: 0.85;
@@ -263,7 +265,7 @@ body {
 
 .hn-btn:hover,
 .hn-btn:focus-visible {
-  background: rgb(255 255 255 / 0.12);
+  background: rgb(255 255 255 / 0.1);
   color: var(--hn-text);
   opacity: 1;
 }
@@ -409,28 +411,28 @@ media-mute-button[data-state='muted'] .hn-volume-mute {
   position: absolute;
   left: 0;
   right: 0;
-  height: 4px;
-  border-radius: 2px;
-  background: rgb(255 255 255 / 0.22);
+  height: 3px;
+  border-radius: 0;
+  background: rgb(255 255 255 / 0.2);
   transition: height 0.12s ease;
 }
 
 .hn-slider-track-fill {
   position: absolute;
   left: 0;
-  height: 4px;
-  border-radius: 2px;
+  height: 3px;
+  border-radius: 0;
   pointer-events: none;
 }
 
 .hn-slider-track-fill--progress {
-  background: var(--hn-brand);
+  background: var(--hn-brand-2);
   width: var(--slider-fill, 0%);
   z-index: 2;
 }
 
 .hn-slider-track-fill--buffered {
-  background: rgb(255 255 255 / 0.3);
+  background: rgb(255 255 255 / 0.32);
   width: var(--slider-progress, 0%);
   z-index: 1;
 }
@@ -439,12 +441,12 @@ media-mute-button[data-state='muted'] .hn-volume-mute {
   position: absolute;
   top: 50%;
   left: var(--slider-fill, 0%);
-  width: 13px;
-  height: 13px;
-  border-radius: 50%;
+  width: 3px;
+  height: 14px;
+  border-radius: 0;
   background: var(--hn-brand-2);
-  box-shadow: 0 0 0 3px rgb(200 16 46 / 0.3);
-  transform: translate(-50%, -50%) scale(0);
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 0.4);
+  transform: translate(-50%, -50%) scaleY(0);
   transition: transform 0.12s ease;
   z-index: 3;
 }
@@ -460,33 +462,44 @@ media-mute-button[data-state='muted'] .hn-volume-mute {
 .hn-volume-slider:hover .hn-slider-thumb,
 .hn-time-slider[data-dragging] .hn-slider-thumb,
 .hn-volume-slider[data-dragging] .hn-slider-thumb {
-  transform: translate(-50%, -50%) scale(1);
+  transform: translate(-50%, -50%) scaleY(1);
 }
 
-/* Slider preview (thumbnail + time on hover scrub) */
+/* Slider preview (thumbnail + time on hover scrub) — hidden at rest so
+   it never collides with the slider; only shown while actively hovering
+   or dragging (vidstack toggles aria-hidden on the preview itself). */
 
 .hn-slider-preview {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
+  margin-bottom: 10px;
   pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.1s ease;
+}
+
+.hn-slider-preview[data-visible] {
+  opacity: 1;
 }
 
 .hn-preview-thumbnail {
-  border-radius: 6px;
+  border-radius: 0;
   overflow: hidden;
-  border: 2px solid rgb(255 255 255 / 0.2);
+  border: 1px solid rgb(255 255 255 / 0.3);
   background: var(--hn-surface);
-  box-shadow: 0 6px 18px rgb(0 0 0 / 0.5);
+  box-shadow: 0 6px 18px rgb(0 0 0 / 0.6);
 }
 
 .hn-preview-time {
   font-size: 11px;
+  font-weight: 700;
   font-variant-numeric: tabular-nums;
-  background: rgb(0 0 0 / 0.85);
+  background: #000;
+  color: var(--hn-text);
   padding: 2px 6px;
-  border-radius: 4px;
+  border-radius: 0;
 }
 
 /* --------------------------------------------------------------------
@@ -495,11 +508,11 @@ media-mute-button[data-state='muted'] .hn-volume-mute {
 
 .hn-menu-items {
   background: var(--hn-surface);
-  border: 1px solid rgb(255 255 255 / 0.08);
-  border-radius: 10px;
+  border: 1px solid rgb(255 255 255 / 0.12);
+  border-radius: var(--hn-radius);
   padding: 6px;
   min-width: 220px;
-  box-shadow: 0 12px 32px rgb(0 0 0 / 0.5);
+  box-shadow: 0 12px 32px rgb(0 0 0 / 0.6);
 }
 
 .hn-menu-item {
@@ -508,7 +521,7 @@ media-mute-button[data-state='muted'] .hn-volume-mute {
   gap: 8px;
   width: 100%;
   padding: 9px 10px;
-  border-radius: 7px;
+  border-radius: var(--hn-radius);
   color: var(--hn-text);
   font-size: 13px;
   cursor: pointer;
@@ -536,7 +549,7 @@ media-mute-button[data-state='muted'] .hn-volume-mute {
   align-items: center;
   gap: 8px;
   padding: 8px 10px;
-  border-radius: 7px;
+  border-radius: var(--hn-radius);
   font-size: 13px;
   color: var(--hn-text-dim);
   cursor: pointer;
@@ -641,7 +654,7 @@ media-mute-button[data-state='muted'] .hn-volume-mute {
   padding: 10px;
   border: none;
   background: none;
-  border-radius: 7px;
+  border-radius: var(--hn-radius);
   color: var(--hn-text);
   font-size: 13px;
   cursor: default;
@@ -669,31 +682,35 @@ media-mute-button[data-state='muted'] .hn-volume-mute {
   position: relative;
   flex-shrink: 0;
   width: 38px;
-  height: 22px;
-  border-radius: 9999px;
+  height: 20px;
+  border-radius: 0;
   background: var(--hn-surface-2);
-  border: 1px solid rgb(255 255 255 / 0.12);
-  transition: background-color 0.15s ease;
+  border: 1px solid rgb(255 255 255 / 0.18);
+  transition: background-color 0.15s ease, border-color 0.15s ease;
 }
 
 .hn-settings-row--toggle[aria-pressed='true'] .hn-toggle {
-  background: var(--hn-brand);
-  border-color: var(--hn-brand);
+  background: var(--hn-text);
+  border-color: var(--hn-text);
 }
 
 .hn-toggle-handle {
   position: absolute;
   top: 2px;
   left: 2px;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
+  width: 14px;
+  height: 14px;
+  border-radius: 0;
   background: var(--hn-text);
-  transition: transform 0.15s ease;
+  transition: transform 0.15s ease, background-color 0.15s ease;
 }
 
 .hn-settings-row--toggle[aria-pressed='true'] .hn-toggle-handle {
-  transform: translateX(16px);
+  background: var(--hn-brand-contrast);
+}
+
+.hn-settings-row--toggle[aria-pressed='true'] .hn-toggle-handle {
+  transform: translateX(18px);
 }
 
 /* --------------------------------------------------------------------
