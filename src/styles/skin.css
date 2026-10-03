@@ -55,6 +55,8 @@ body {
 
 .hn-player {
   --media-button-icon-size: 60%;
+  width: 100%;
+  max-width: 100%;
   border-radius: 14px;
   overflow: hidden;
   box-shadow:

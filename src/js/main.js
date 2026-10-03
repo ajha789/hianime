@@ -17,7 +17,7 @@ const ASS_TRACK = {
   label: 'Fansub (ASS)',
   language: 'en',
   type: 'ssa',
-  src: '/sample/sample.ass',
+  src: './sample/sample.ass',
 };
 
 async function main() {
@@ -26,14 +26,14 @@ async function main() {
   const player = document.querySelector('.hn-player');
   if (!player) return;
 
-  const jassubUrl = '/vendor/jassub/jassub.js';
+  const jassubUrl = './vendor/jassub/jassub.js';
 
   player.textRenderers.add(
     new LibASSTextRenderer(() => import(/* @vite-ignore */ jassubUrl), {
-      workerUrl: '/vendor/jassub/wasm/jassub-worker.js',
-      wasmUrl: '/vendor/jassub/wasm/jassub-worker.wasm',
-      modernWasmUrl: '/vendor/jassub/wasm/jassub-worker-modern.wasm',
-      defaultFont: '/vendor/jassub/default.woff2',
+      workerUrl: './vendor/jassub/wasm/jassub-worker.js',
+      wasmUrl: './vendor/jassub/wasm/jassub-worker.wasm',
+      modernWasmUrl: './vendor/jassub/wasm/jassub-worker-modern.wasm',
+      defaultFont: './vendor/jassub/default.woff2',
     }),
   );
 

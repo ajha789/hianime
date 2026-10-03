@@ -4,9 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Hianime Player</title>
-    <link rel="stylesheet" href="/vendor/vidstack/styles/base.css" />
-    <link rel="stylesheet" href="/vendor/vidstack/styles/default/theme.css" />
-    <link rel="stylesheet" href="/vendor/vidstack/styles/default/layouts/video.css" />
+    <link rel="stylesheet" href="./vendor/vidstack/styles/base.css" />
+    <link rel="stylesheet" href="./vendor/vidstack/styles/default/theme.css" />
+    <link rel="stylesheet" href="./vendor/vidstack/styles/default/layouts/video.css" />
     <link rel="stylesheet" href="/src/styles/skin.css" />
   <body>
     <main class="demo-page">
@@ -16,7 +16,7 @@
       <media-player
         class="hn-player"
         title="Sample Episode"
-        src="/sample/sample.webm"
+        src="./sample/sample.webm"
         poster="/sample/poster.jpg"
         crossorigin
         playsinline
@@ -28,14 +28,14 @@
 
         <!-- Native text tracks kept for fallback / non-ASS subs -->
         <track
-          src="/sample/sample.vtt"
+          src="./sample/sample.vtt"
           kind="subtitles"
           label="English (VTT)"
           srclang="en"
         />
 
         <media-buffering-indicator class="hn-buffering">
-          <img src="/assets/icons/buffering-spinner.svg" class="hn-buffering-icon" alt="" />
+          <img src="./assets/icons/buffering-spinner.svg" class="hn-buffering-icon" alt="" />
         </media-buffering-indicator>
 
         <!--
@@ -69,15 +69,15 @@
 
             <div class="hn-controls-row">
               <media-play-button class="hn-btn hn-btn--play">
-                <img src="/assets/icons/play.svg" class="hn-icon hn-icon--play" alt="" />
-                <img src="/assets/icons/pause.svg" class="hn-icon hn-icon--pause" alt="" />
-                <img src="/assets/icons/replay.svg" class="hn-icon hn-icon--replay" alt="" />
+                <img src="./assets/icons/play.svg" class="hn-icon hn-icon--play" alt="" />
+                <img src="./assets/icons/pause.svg" class="hn-icon hn-icon--pause" alt="" />
+                <img src="./assets/icons/replay.svg" class="hn-icon hn-icon--replay" alt="" />
               </media-play-button>
 
               <media-mute-button class="hn-btn hn-btn--volume">
-                <img src="/assets/icons/volume-muted.svg" class="hn-icon hn-icon--vol-muted" alt="" />
-                <img src="/assets/icons/volume-low.svg" class="hn-icon hn-icon--vol-low" alt="" />
-                <img src="/assets/icons/volume-high.svg" class="hn-icon hn-icon--vol-high" alt="" />
+                <img src="./assets/icons/volume-muted.svg" class="hn-icon hn-icon--vol-muted" alt="" />
+                <img src="./assets/icons/volume-low.svg" class="hn-icon hn-icon--vol-low" alt="" />
+                <img src="./assets/icons/volume-high.svg" class="hn-icon hn-icon--vol-high" alt="" />
               </media-mute-button>
               <media-volume-slider class="hn-volume-slider">
                 <div class="hn-slider-track" slot="track"></div>
@@ -97,13 +97,13 @@
 
               <media-menu class="hn-menu hn-menu--subs">
                 <media-menu-button class="hn-btn hn-btn--menu" aria-label="Subtitles">
-                  <img src="/assets/icons/subtitles-on.svg" class="hn-icon" alt="" />
+                  <img src="./assets/icons/subtitles-on.svg" class="hn-icon" alt="" />
                 </media-menu-button>
                 <media-menu-items class="hn-menu-items" placement="top end">
                   <media-captions-radio-group class="hn-radio-group">
                     <template>
                       <media-radio class="hn-radio">
-                        <img src="/assets/icons/check.svg" class="hn-radio-check" alt="" />
+                        <img src="./assets/icons/check.svg" class="hn-radio-check" alt="" />
                         <span class="hn-radio-label" data-part="label"></span>
                       </media-radio>
                     </template>
@@ -113,20 +113,20 @@
 
               <media-menu class="hn-menu hn-menu--settings">
                 <media-menu-button class="hn-btn hn-btn--menu" aria-label="Settings">
-                  <img src="/assets/icons/settings.svg" class="hn-icon hn-icon--spin-on-open" alt="" />
+                  <img src="./assets/icons/settings.svg" class="hn-icon hn-icon--spin-on-open" alt="" />
                 </media-menu-button>
                 <media-menu-items class="hn-menu-items" placement="top end">
                   <media-menu class="hn-submenu">
                     <media-menu-button class="hn-menu-item">
-                      <img src="/assets/icons/speed.svg" class="hn-icon" alt="" />
+                      <img src="./assets/icons/speed.svg" class="hn-icon" alt="" />
                       <span class="hn-menu-item-label">Speed</span>
-                      <img src="/assets/icons/chevron-right.svg" class="hn-icon hn-icon--chev" alt="" />
+                      <img src="./assets/icons/chevron-right.svg" class="hn-icon hn-icon--chev" alt="" />
                     </media-menu-button>
                     <media-menu-items class="hn-menu-items">
                       <media-speed-radio-group class="hn-radio-group">
                         <template>
                           <media-radio class="hn-radio">
-                            <img src="/assets/icons/check.svg" class="hn-radio-check" alt="" />
+                            <img src="./assets/icons/check.svg" class="hn-radio-check" alt="" />
                             <span class="hn-radio-label" data-part="label"></span>
                           </media-radio>
                         </template>
@@ -136,15 +136,15 @@
 
                   <media-menu class="hn-submenu">
                     <media-menu-button class="hn-menu-item">
-                      <img src="/assets/icons/quality.svg" class="hn-icon" alt="" />
+                      <img src="./assets/icons/quality.svg" class="hn-icon" alt="" />
                       <span class="hn-menu-item-label">Quality</span>
-                      <img src="/assets/icons/chevron-right.svg" class="hn-icon hn-icon--chev" alt="" />
+                      <img src="./assets/icons/chevron-right.svg" class="hn-icon hn-icon--chev" alt="" />
                     </media-menu-button>
                     <media-menu-items class="hn-menu-items">
                       <media-quality-radio-group class="hn-radio-group">
                         <template>
                           <media-radio class="hn-radio">
-                            <img src="/assets/icons/check.svg" class="hn-radio-check" alt="" />
+                            <img src="./assets/icons/check.svg" class="hn-radio-check" alt="" />
                             <span class="hn-radio-label" data-part="label"></span>
                           </media-radio>
                         </template>
@@ -155,13 +155,13 @@
               </media-menu>
 
               <media-pip-button class="hn-btn">
-                <img src="/assets/icons/pip-enter.svg" class="hn-icon hn-icon--pip-enter" alt="" />
-                <img src="/assets/icons/pip-exit.svg" class="hn-icon hn-icon--pip-exit" alt="" />
+                <img src="./assets/icons/pip-enter.svg" class="hn-icon hn-icon--pip-enter" alt="" />
+                <img src="./assets/icons/pip-exit.svg" class="hn-icon hn-icon--pip-exit" alt="" />
               </media-pip-button>
 
               <media-fullscreen-button class="hn-btn">
-                <img src="/assets/icons/fullscreen-enter.svg" class="hn-icon hn-icon--fs-enter" alt="" />
-                <img src="/assets/icons/fullscreen-exit.svg" class="hn-icon hn-icon--fs-exit" alt="" />
+                <img src="./assets/icons/fullscreen-enter.svg" class="hn-icon hn-icon--fs-enter" alt="" />
+                <img src="./assets/icons/fullscreen-exit.svg" class="hn-icon hn-icon--fs-exit" alt="" />
               </media-fullscreen-button>
             </div>
           </div>
