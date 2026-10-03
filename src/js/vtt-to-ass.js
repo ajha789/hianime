@@ -66,8 +66,6 @@ function convertInlineMarkup(text) {
     const tag = part.slice(1, -1).trim();
     if (/^b$/i.test(tag)) return '{\\b1}';
     if (/^\/b$/i.test(tag)) return '{\\b0}';
-    if (/^i$/i.test(tag)) return '{\\i1}';
-    if (/^\/i$/i.test(tag)) return '{\\i0}';
     if (/^u$/i.test(tag)) return '{\\u1}';
     if (/^\/u$/i.test(tag)) return '{\\u0}';
 

@@ -47,7 +47,7 @@ async function main() {
     }),
   );
 
-  const controlsIdleDelay = 2000;
+  const controlsIdleDelay = 800;
   let controlsIdleTimer;
   const resetControlsIdle = () => {
     clearTimeout(controlsIdleTimer);

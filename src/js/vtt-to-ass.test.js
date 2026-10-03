@@ -12,11 +12,12 @@ test('creates an ASS document with the fansub style profile', () => {
   assert.match(ass, /,1,4,1\.5,2,60,60,48,1$/m);
 });
 
-test('converts cue times and preserves bold, italic, and line breaks', () => {
+test('converts cue times, keeps text upright, and preserves bold and line breaks', () => {
   const ass = vttToAss(`WEBVTT\n\n00:00:01.000 --> 00:00:03.555\n<b>Bold</b> and <i>italic</i><br>next line`);
   assert.match(ass, /Dialogue: 0,0:00:01\.00,0:00:03\.56,Default,,0,0,0,,\{\\b1\}Bold/);
   assert.match(ass, /\\b1\}Bold\{\\b0\}/);
-  assert.match(ass, /\\i1\}italic\{\\i0\}/);
+  assert.match(ass, / and italic\\Nnext line/);
+  assert.doesNotMatch(ass, /\\i[10]/);
   assert.match(ass, /\\Nnext line/);
 });
 
