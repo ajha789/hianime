@@ -51,17 +51,28 @@ async function main() {
     }),
   );
 
-  const controlsIdleDelay = 800;
+  const controlsIdleDelay = window.matchMedia('(pointer: coarse)').matches ? 2800 : 2500;
   let controlsIdleTimer;
-  const resetControlsIdle = () => {
+  const keepControlsVisible = () => {
     clearTimeout(controlsIdleTimer);
     player.removeAttribute('data-hn-controls-idle');
+  };
+  const resetControlsIdle = () => {
+    keepControlsVisible();
+    if (player.paused) return;
     controlsIdleTimer = setTimeout(() => {
+      if (player.paused || player.hasAttribute('data-buffering')) return;
       player.setAttribute('data-hn-controls-idle', '');
     }, controlsIdleDelay);
   };
   for (const eventName of ['pointermove', 'pointerdown', 'touchstart', 'keydown', 'focusin']) {
     player.addEventListener(eventName, resetControlsIdle, { passive: true });
+  }
+  for (const eventName of ['play', 'playing']) {
+    player.addEventListener(eventName, resetControlsIdle);
+  }
+  for (const eventName of ['pause', 'ended', 'waiting', 'load-start', 'error']) {
+    player.addEventListener(eventName, keepControlsVisible);
   }
   resetControlsIdle();
 

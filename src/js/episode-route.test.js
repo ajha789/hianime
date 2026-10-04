@@ -20,6 +20,13 @@ test('builds the expected index.txt HLS URL', () => {
   );
 });
 
+test('builds the episode URL for a second resolved AID', () => {
+  assert.equal(
+    createEpisodeStreamUrl(195518, '1'),
+    'https://cdn.animetvplus.xyz/195518/hls/1/index.txt',
+  );
+});
+
 test('rejects invalid AIDs and episode numbers when building a URL', () => {
   assert.throws(() => createEpisodeStreamUrl('1/2', '1'), TypeError);
   assert.throws(() => createEpisodeStreamUrl('100', '0'), TypeError);

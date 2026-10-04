@@ -950,10 +950,6 @@ media-mute-button[data-state='muted'] .hn-volume-mute {
   transition: opacity 180ms ease;
 }
 
-.hn-player:not([data-hn-controls-idle]) .hn-captions {
-  opacity: 0.35;
-}
-
 .hn-captions [data-part='cue'] {
   font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif;
   font-weight: 700;
@@ -973,6 +969,110 @@ media-mute-button[data-state='muted'] .hn-volume-mute {
   transition: opacity 180ms ease;
 }
 
-.hn-player:not([data-hn-controls-idle]) video ~ canvas.JASSUB {
-  opacity: 0.35;
+
+/* Phone layout: compact controls stay within reach; secondary actions use
+   the otherwise empty top edge, leaving the subtitle/video area unobstructed. */
+@media (max-width: 600px) {
+  .hn-controls {
+    padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
+  }
+
+  .hn-top-gradient {
+    padding: 8px;
+  }
+
+  .hn-rating-badge {
+    gap: 0;
+  }
+
+  .hn-rating-badge-tag {
+    padding: 5px 7px;
+    font-size: 11px;
+  }
+
+  .hn-rating-badge-text {
+    display: none;
+  }
+
+  .hn-controls-bottom {
+    gap: 5px;
+  }
+
+  .hn-controls-row {
+    min-width: 0;
+    gap: 0;
+  }
+
+  .hn-controls-row > .hn-btn {
+    width: 34px;
+    height: 34px;
+    padding: 4px;
+  }
+
+  .hn-controls-row > .hn-btn--play {
+    width: 38px;
+    height: 38px;
+  }
+
+  .hn-controls-row .hn-icon {
+    width: 19px;
+    height: 19px;
+  }
+
+  .hn-controls-row > .hn-volume-slider {
+    display: none !important;
+  }
+
+  .hn-controls-row > .hn-time {
+    gap: 2px;
+    padding: 0 3px;
+    font-size: 10px;
+  }
+
+  .hn-controls-row > .hn-chapter-title,
+  .hn-controls-row > .hn-controls-spacer-row,
+  .hn-controls-row > button[disabled] {
+    display: none !important;
+  }
+
+  .hn-controls-row > .hn-menu--subs > media-menu-button,
+  .hn-controls-row > .hn-menu--speed > media-menu-button,
+  .hn-controls-row > .hn-menu--settings > media-menu-button,
+  .hn-controls-row > media-fullscreen-button {
+    position: absolute;
+    top: 7px;
+    z-index: 12;
+    width: 32px;
+    height: 32px;
+    padding: 4px;
+  }
+
+  .hn-controls-row > .hn-menu--subs > media-menu-button {
+    right: 105px;
+  }
+
+  .hn-controls-row > .hn-menu--speed > media-menu-button {
+    right: 71px;
+    min-width: 32px;
+    padding: 0;
+    font-size: 11px;
+  }
+
+  .hn-controls-row > .hn-menu--settings > media-menu-button {
+    right: 37px;
+  }
+
+  .hn-controls-row > media-fullscreen-button {
+    right: 5px;
+  }
+
+  .hn-menu-items {
+    z-index: 20;
+    max-width: calc(100vw - 16px);
+  }
+
+  .hn-captions {
+    --media-cue-font-size: clamp(15px, 4.3vw, 23px);
+    --media-captions-padding: 0 4% calc(12px + env(safe-area-inset-bottom));
+  }
 }
