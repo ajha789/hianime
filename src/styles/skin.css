@@ -33,6 +33,36 @@ body {
   color: var(--hn-text);
   font-family: 'Trebuchet MS', 'Segoe UI', system-ui, sans-serif;
 }
+body.hn-embed-mode {
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+}
+body.hn-embed-mode .demo-page {
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+body.hn-embed-mode .demo-title,
+body.hn-embed-mode .demo-subtitle,
+body.hn-embed-mode .hn-source-bar {
+  display: none !important;
+}
+body.hn-embed-mode .hn-player {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 0;
+  max-width: none;
+  aspect-ratio: auto;
+  border-radius: 0;
+  box-shadow: none;
+}
 
 .demo-page {
   max-width: 1100px;

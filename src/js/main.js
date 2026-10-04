@@ -5,6 +5,7 @@ import 'vidstack/player/ui';
 import { LibASSTextRenderer, TextTrack } from 'vidstack';
 import jassubWorkerUrl from 'jassub/dist/worker/worker.js?worker&url';
 import { vttToAss } from './vtt-to-ass.js';
+import { createEpisodeStreamUrl, parseEpisodePath } from './episode-route.js';
 
 const HLS_MIME = 'application/x-mpegurl';
 
@@ -31,6 +32,9 @@ async function main() {
 
   const player = document.querySelector('.hn-player');
   if (!player) return;
+  const episodeRoute = parseEpisodePath(window.location.pathname);
+  if (episodeRoute) document.body.classList.add('hn-embed-mode');
+  else player.src = new URL('/sample/hls/master.m3u8', window.location.origin).href;
 
   // Remove any stale poster property left by an older cached markup/build.
   player.removeAttribute('poster');
@@ -38,7 +42,7 @@ async function main() {
 
   // Resolve static WASM assets from the app root (not relative to this JS
   // module, which Vite serves from /src/js or /assets).
-  const jassubAssetUrl = (path) => new URL(`vendor/jassub/${path}`, document.baseURI).href;
+  const jassubAssetUrl = (path) => new URL(`/vendor/jassub/${path}`, window.location.origin).href;
   player.textRenderers.add(
     new LibASSTextRenderer(() => import('./jassub-vidstack-adapter.js'), {
       workerUrl: jassubWorkerUrl,
@@ -179,21 +183,23 @@ async function main() {
     }
   };
 
-  // Start the sample VTT conversion on load. A user-submitted source will
-  // invalidate this request and replace the demo subtitle with its own tracks.
-  const demoRequest = ++subtitleRequest;
-  addSubtitleTrack({
-    src: './sample/sample.vtt',
-    label: 'English (WebVTT → libass)',
-    language: 'en',
-    isDefault: true,
-  }, demoRequest).catch((error) => console.warn('Could not load the sample VTT subtitle:', error));
+  // Only the root demo uses the bundled sample subtitle. Embed routes are
+  // deliberately clean and load only the selected episode's remote tracks.
+  if (!episodeRoute) {
+    const demoRequest = ++subtitleRequest;
+    addSubtitleTrack({
+      src: '/sample/sample.vtt',
+      label: 'English (WebVTT → libass)',
+      language: 'en',
+      isDefault: true,
+    }, demoRequest).catch((error) => console.warn('Could not load the sample VTT subtitle:', error));
+  }
 
   // Use the first second of the media as the idle preview instead of loading
   // a separate poster image. Reset this for every newly loaded source.
-  let previewPending = true;
+  let previewPending = !episodeRoute;
   player.addEventListener('load-start', () => {
-    previewPending = true;
+    previewPending = !episodeRoute;
   });
   player.addEventListener('can-play', () => {
     if (!previewPending) return;
@@ -238,6 +244,29 @@ async function main() {
     player.src = sourceForPlayer(url, sourceType?.value || '');
     loadMetadataSubtitles(url);
   });
+  if (episodeRoute) {
+    try {
+      const mappingUrl = new URL('https://edge1-frankfut.animetvplus.site/dlm/malep');
+      mappingUrl.searchParams.set('mal', episodeRoute.malId);
+      const response = await fetch(mappingUrl, { credentials: 'omit' });
+      if (!response.ok) throw new Error(`Episode lookup failed (${response.status}).`);
+      const mapping = await response.json();
+      if (!mapping || !/^\d+$/.test(String(mapping.aid)) || Number(mapping.aid) < 1) {
+        throw new Error('Episode lookup returned an invalid AID.');
+      }
+      const cdnUrl = new URL(createEpisodeStreamUrl(mapping.aid, episodeRoute.episodeNumber));
+      // The CDN path is mirrored by this site's Nginx proxy. Keep the same
+      // path while making the browser request same-origin: the CDN currently
+      // omits Access-Control-Allow-Origin on both playlists and segments.
+      cdnUrl.protocol = window.location.protocol;
+      cdnUrl.host = window.location.host;
+      const streamUrl = cdnUrl.href;
+      player.src = sourceForPlayer(streamUrl);
+      loadMetadataSubtitles(streamUrl);
+    } catch (error) {
+      console.error('Could not load the requested episode:', error);
+    }
+  }
 }
 
 export { isHlsUrl, sourceForPlayer };
