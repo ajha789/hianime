@@ -274,11 +274,8 @@ async function main() {
         throw new Error('Episode lookup returned an invalid AID.');
       }
       const cdnUrl = new URL(createEpisodeStreamUrl(mapping.aid, episodeRoute.episodeNumber));
-      // The CDN path is mirrored by this site's Nginx proxy. Keep the same
-      // path while making the browser request same-origin: the CDN currently
-      // omits Access-Control-Allow-Origin on both playlists and segments.
-      cdnUrl.protocol = window.location.protocol;
-      cdnUrl.host = window.location.host;
+      // Keep HLS and subtitle requests on the edge CDN. It supplies CORS and
+      // avoids routing media through the embed web server.
       const streamUrl = cdnUrl.href;
       player.src = sourceForPlayer(streamUrl);
       loadMetadataSubtitles(streamUrl);
