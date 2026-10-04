@@ -16,14 +16,14 @@ test('rejects paths that are not exactly two positive integer segments', () => {
 test('builds the expected index.txt HLS URL', () => {
   assert.equal(
     createEpisodeStreamUrl(195600, '1'),
-    'https://cdn.animetvplus.xyz/195600/hls/1/index.txt',
+    'https://edge.animetvplus.xyz/195600/hls/1/index.txt',
   );
 });
 
 test('builds the episode URL for a second resolved AID', () => {
   assert.equal(
     createEpisodeStreamUrl(195518, '1'),
-    'https://cdn.animetvplus.xyz/195518/hls/1/index.txt',
+    'https://edge.animetvplus.xyz/195518/hls/1/index.txt',
   );
 });
 
