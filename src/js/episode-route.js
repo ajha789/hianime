@@ -14,5 +14,5 @@ export function createEpisodeStreamUrl(aid, episodeNumber) {
   if (!POSITIVE_INTEGER.test(aidText) || !POSITIVE_INTEGER.test(episodeText)) {
     throw new TypeError('AID and episode number must be positive integers.');
   }
-  return `https://cdn.animetvplus.xyz/${aidText}/hls/${episodeText}/index.txt`;
+  return `https://edge.animetvplus.xyz/${aidText}/hls/${episodeText}/index.txt`;
 }
