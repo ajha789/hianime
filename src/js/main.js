@@ -94,6 +94,7 @@ async function main() {
     '.hn-volume-slider',
   ].join(', ');
   player.addEventListener('click', (event) => {
+    if (player.hasAttribute('data-hn-start-pending')) return;
     if (!(event.target instanceof Element) || event.target.closest(interactivePlayerTargets)) return;
     if (player.paused) {
       player.play().catch((error) => console.warn('Could not start playback from the player surface:', error));
@@ -101,6 +102,54 @@ async function main() {
       player.pause();
     }
   });
+
+  // Episode embed routes gate playback behind a thumbnail + play button:
+  // the stream loads in the background, and only starts once the viewer
+  // clicks through, instead of autoplaying into visible controls.
+  const posterEl = player.querySelector('[data-hn-poster]');
+  const posterImg = player.querySelector('[data-hn-poster-img]');
+  const posterPlayButton = player.querySelector('[data-hn-poster-play]');
+
+  const openEpisodeStartGate = () => {
+    if (!posterEl) return null;
+    player.setAttribute('data-hn-start-pending', '');
+    posterEl.removeAttribute('data-visible');
+    posterEl.removeAttribute('data-hidden');
+
+    const reveal = () => posterEl.setAttribute('data-visible', '');
+    player.addEventListener('can-play', reveal, { once: true });
+
+    const start = () => {
+      player.removeEventListener('can-play', reveal);
+      posterEl.removeAttribute('data-visible');
+      posterEl.setAttribute('data-hidden', '');
+      player.removeAttribute('data-hn-start-pending');
+      player.play().catch((error) => console.warn('Could not start playback:', error));
+    };
+    posterPlayButton?.addEventListener('click', start, { once: true });
+
+    return {
+      setThumbnail(url) {
+        if (posterImg && url) posterImg.src = url;
+      },
+    };
+  };
+
+  const loadEpisodeThumbnail = async (aid, episodeNumber, startGate) => {
+    try {
+      const thumbsUrl = new URL(`https://reanime.to/api/thumbnails/${aid}`);
+      const response = await fetch(thumbsUrl, { credentials: 'omit' });
+      if (!response.ok) {
+        console.warn(`Thumbnail request failed (${response.status}): ${thumbsUrl}`);
+        return;
+      }
+      const data = await response.json();
+      const thumbnailUrl = data?.thumbnails?.[String(episodeNumber)];
+      if (thumbnailUrl) startGate?.setThumbnail(thumbnailUrl);
+    } catch (error) {
+      console.warn('Could not load the episode thumbnail:', error);
+    }
+  };
 
   let subtitleTracks = [];
   let subtitleBlobUrls = new Set();
@@ -266,8 +315,10 @@ async function main() {
         throw new Error('Episode lookup returned an invalid AID.');
       }
       const streamUrl = createEpisodeStreamUrl(mapping.aid, episodeRoute.episodeNumber);
+      const startGate = openEpisodeStartGate();
       player.src = sourceForPlayer(streamUrl);
       loadMetadataSubtitles(streamUrl);
+      loadEpisodeThumbnail(mapping.aid, episodeRoute.episodeNumber, startGate);
     } catch (error) {
       console.error('Could not load the requested episode:', error);
     }

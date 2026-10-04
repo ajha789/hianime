@@ -206,6 +206,60 @@ body.hn-embed-mode .hn-player {
 }
 
 /* --------------------------------------------------------------------
+   Episode start gate — thumbnail + centered play button shown over an
+   embed route while its stream loads. No pointer-events on the poster
+   itself; only the button is clickable, and only once the poster has
+   actually faded in.
+   -------------------------------------------------------------------- */
+
+.hn-poster-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 84px;
+  height: 84px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgb(0 0 0 / 0.55);
+  color: var(--hn-text);
+  cursor: pointer;
+  pointer-events: none;
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.hn-poster[data-visible] .hn-poster-play {
+  pointer-events: auto;
+}
+
+.hn-poster-play:hover {
+  background: rgb(0 0 0 / 0.7);
+  transform: translate(-50%, -50%) scale(1.06);
+}
+
+.hn-poster-play-icon {
+  width: 42%;
+  height: 42%;
+  margin-left: 6%;
+}
+
+@media (pointer: coarse) {
+  .hn-poster-play {
+    width: 64px;
+    height: 64px;
+  }
+}
+
+.hn-player[data-hn-start-pending] .hn-controls,
+.hn-player[data-hn-start-pending] .hn-gesture-layer {
+  display: none;
+}
+
+/* --------------------------------------------------------------------
    Buffering — single-ring spinner: a dim track plus a bright rotating
    arc, both in the brand red.
    -------------------------------------------------------------------- */
