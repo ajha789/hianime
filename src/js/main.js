@@ -265,13 +265,7 @@ async function main() {
       if (!mapping || !/^\d+$/.test(String(mapping.aid)) || Number(mapping.aid) < 1) {
         throw new Error('Episode lookup returned an invalid AID.');
       }
-      const cdnUrl = new URL(createEpisodeStreamUrl(mapping.aid, episodeRoute.episodeNumber));
-      // The CDN path is mirrored by this site's Nginx proxy. Keep the same
-      // path while making the browser request same-origin: the CDN currently
-      // omits Access-Control-Allow-Origin on both playlists and segments.
-      cdnUrl.protocol = window.location.protocol;
-      cdnUrl.host = window.location.host;
-      const streamUrl = cdnUrl.href;
+      const streamUrl = createEpisodeStreamUrl(mapping.aid, episodeRoute.episodeNumber);
       player.src = sourceForPlayer(streamUrl);
       loadMetadataSubtitles(streamUrl);
     } catch (error) {
