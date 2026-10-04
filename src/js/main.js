@@ -9,6 +9,13 @@ import { createEpisodeStreamUrl, parseEpisodePath } from './episode-route.js';
 
 const HLS_MIME = 'application/x-mpegurl';
 
+function normalizeSourceUrl(rawUrl) {
+  const value = rawUrl.trim();
+  if (value.startsWith('//')) return `https:${value}`;
+  if (/^[a-z][a-z\d+.-]*:\/\//i.test(value)) return value;
+  return `https://${value}`;
+}
+
 function isHlsUrl(url) {
   const path = url.split(/[?#]/, 1)[0].toLowerCase();
   return path.endsWith('.m3u8') || path.endsWith('.txt');
@@ -250,8 +257,9 @@ async function main() {
   const sourceType = document.querySelector('[data-hn-source-type]');
   sourceForm?.addEventListener('submit', (event) => {
     event.preventDefault();
-    const url = sourceInput?.value.trim();
-    if (!url) return;
+    const rawUrl = sourceInput?.value.trim();
+    if (!rawUrl) return;
+    const url = normalizeSourceUrl(rawUrl);
     player.src = sourceForPlayer(url, sourceType?.value || '');
     loadMetadataSubtitles(url);
   });
@@ -280,6 +288,6 @@ async function main() {
   }
 }
 
-export { isHlsUrl, sourceForPlayer };
+export { isHlsUrl, normalizeSourceUrl, sourceForPlayer };
 
 main();
